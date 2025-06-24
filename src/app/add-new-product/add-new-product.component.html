@@ -1,0 +1,82 @@
+<div class="container mt-5">
+    <div class="card p-3">
+
+        <h4 class="text-center mb-4">
+            {{ isNewProduct ? 'Add New Product' : 'Update Product' }}
+        </h4>
+
+        <div class="row">
+            <!-- Product Form Section -->
+            <div class="col-12 col-lg-6">
+                <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Product Name</mat-label>
+                        <input matInput placeholder="Product Name" [(ngModel)]="product.productName"
+                            name="productName" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Product Description</mat-label>
+                        <input matInput placeholder="Product Description" [(ngModel)]="product.productDescription"
+                            name="productDescription" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Product Actual Price</mat-label>
+                        <input matInput placeholder="Product Actual Price" type="number"
+                            [(ngModel)]="product.productActualPrice" name="productActualPrice" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Product Discounted Price</mat-label>
+                        <input matInput placeholder="Product Discounted Price" type="number"
+                            [(ngModel)]="product.productDiscountedPrice" name="productDiscountedPrice" />
+                    </mat-form-field>
+
+                    <div class="text-center mt-3 d-flex justify-content-center gap-3 flex-wrap">
+                        <button *ngIf="isNewProduct" mat-flat-button color="primary" type="submit" class="m-2"
+                            aria-label="Add Product">
+                            <mat-icon class="me-1">add_circle</mat-icon>
+                            Add Product
+                        </button>
+                        <button *ngIf="!isNewProduct" mat-flat-button color="primary" type="submit" class="m-2"
+                            aria-label="Update Product">
+                            <mat-icon class="me-1">edit</mat-icon>
+                            Update Product
+                        </button>
+                        <button mat-flat-button color="warn" type="button" class="m-2" aria-label="Clear Form"
+                            (click)="clearProductData(productForm)">
+                            <mat-icon class="me-1">clear</mat-icon>
+                            Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- File Upload & Preview Section -->
+            <div class="col-12 col-lg-6">
+                <div class="card p-2 mb-3">
+                    <div class="dropzone" appDrag (files)="filesDropped($event)">
+                        <div class="wrap-message">
+                            Drag and drop your file or
+                            <a class="browse-btn" (click)="selectFile.click()">browse</a> a file
+                        </div>
+                        <input #selectFile type="file" multiple (change)="onFileSelected($event)"
+                            style="display: none;" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <mat-grid-list [cols]="gridCols" rowHeight="150px" gutterSize="8px">
+                        <mat-grid-tile *ngFor="let file of product.productImages; let i = index">
+                            <div class="image-wrapper">
+                                <span (click)="removeImage(i)" class="btn-remove-image">×</span>
+                                <img [src]="file.url" alt="Product image" />
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="image-viewer-container">
+  <button class="close-button" (click)="close()">✕</button>
+
+  <mat-grid-list *ngIf="data.images?.length > 0" [cols]="cols" rowHeight="1:1" gutterSize="12px" class="image-grid">
+    <mat-grid-tile *ngFor="let fileHandle of data.images" class="image-tile">
+      <img [src]="fileHandle.url"
+           [alt]="fileHandle.file?.description || fileHandle.file?.name || 'Product Image'"
+           role="img"
+           class="product-image" />
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <div *ngIf="!data.images || data.images.length === 0" class="no-images-msg">
+    No Images Found
+  </div>
+</div>
