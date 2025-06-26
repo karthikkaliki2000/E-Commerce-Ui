@@ -1,0 +1,42 @@
+<div class="open-router-chat-container">
+    <div class="open-router-chat-head">
+        <h1>Open Router Assistant</h1>
+    </div>
+
+    <div class="open-router-chat-history">
+        <div *ngFor="let chat of chatHistory" class="chat-message"
+            [ngClass]="{'user': chat.isUser, 'bot': !chat.isUser, 'streaming': chat.streaming, 'error': chat.error}">
+            <div class="chat-bubble">
+                <div class="message-content">
+                    <div class="message-text">
+                        <strong *ngIf="chat.isUser">You:</strong>
+                        <strong *ngIf="!chat.isUser">Open Router says:</strong>
+                        <ng-container *ngIf="!chat.isUser && chat.bot; else plainText">
+                            <span [innerHTML]="chat.bot"></span>
+                        </ng-container>
+                        <ng-template #plainText>
+                            <span>{{ chat.text }}</span>
+                        </ng-template>
+                    </div>
+                    <div class="timestamp">{{ chat.time | date:'shortTime' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div #bottomOfChat></div>
+
+    <div class="input-area">
+        <textarea #chatInput [(ngModel)]="message" placeholder="Type your question..." [disabled]="loading"
+            (keydown)="onInputKeydown($event)" aria-label="Type your question"></textarea>
+        <button (click)="askOpenRouter()" [disabled]="loading">
+            <ng-container *ngIf="!loading">Ask</ng-container>
+            <ng-container *ngIf="loading">
+                <span class="spinner"></span> Loading...
+            </ng-container>
+        </button>
+    </div>
+
+    <div class="chatbot-bottom-bar">
+        <!-- Clear History button removed -->
+    </div>
+</div>

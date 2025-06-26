@@ -9,6 +9,7 @@ import { AuthGuard } from './_auth/auth.guard';
 import { AddNewProductComponent } from './add-new-product/add-new-product.component';
 import { ShowProductDetailsComponent } from './show-product-details/show-product-details.component';
 import { ProductResolverService } from './_services/product-resolver.service';
+import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,8 @@ const routes: Routes = [
   {
     path: 'showProductDetails',
     component: ShowProductDetailsComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
 ];
 

@@ -1,7 +1,48 @@
 <div class="container mt-5">
-    <div class="card text-center" style="padding: 20px;">
-        <h1>
-        Welcome to Home Page
-    </h1>
-    </div>
+    <mat-grid-list cols="4" rowHeight="1:1.3" gutterSize="20px" class="grid-container">
+        <mat-grid-tile *ngFor="let p of products">
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img *ngIf="p.productImages?.[0]?.url" [src]="p.productImages?.[0]?.url" alt="Product Image"
+                        class="product-image">
+                </div>
+                <div class="product-details">
+                    <h2 class="product-title">{{p.productName}}</h2>
+                    <p class="product-description">{{p.productDescription}}</p>
+                    <div class="product-prices">
+                        <span class="discounted-price">₹{{p.productDiscountedPrice}}</span>
+                        <span class="actual-price">₹{{p.productActualPrice}}</span>
+                    </div>
+                    <button mat-raised-button color="primary" class="add-to-cart-btn">Show Details</button>
+                </div>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+
+    <!-- Floating Chat Button -->
+    <button mat-fab color="primary" class="chat-fab" (click)="openChatDialog()">
+        <mat-icon>chat</mat-icon>
+    </button>
+
+    <!-- Chat Dialog -->
+    <ng-container *ngIf="openChat">
+        <div class="chat-dialog-backdrop" (click)="openChat = false"></div>
+        <div class="chat-dialog">
+            <app-ollama-chat *ngIf="selectedBot === 'ollama'" #ollamaChat></app-ollama-chat>
+            <app-open-router-chat *ngIf="selectedBot === 'openrouter'" #openRouterChat></app-open-router-chat>
+            <div class="chatbot-bottom-bar">
+                <div class="chatbot-switcher">
+                    <label for="botSelect">Chatbot:</label>
+                    <select id="botSelect" [(ngModel)]="selectedBot">
+                        <option value="ollama">Ollama</option>
+                        <option value="openrouter">Open Router</option>
+                    </select>
+                </div>
+                <button class="clear-history-btn" (click)="clearActiveHistory()">Clear History</button>
+            </div>
+            <button mat-icon-button class="close-btn" (click)="openChat = false">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </ng-container>
 </div>

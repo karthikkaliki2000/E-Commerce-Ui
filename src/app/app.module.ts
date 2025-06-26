@@ -31,6 +31,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ShowProductImagesDialogComponent } from './show-product-images-dialog/show-product-images-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
+import { OpenRouterChatComponent } from './open-router-chat/open-router-chat.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +47,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     DragDirective,
     ShowProductDetailsComponent,
     ShowProductImagesDialogComponent,
+    OllamaChatComponent,
+    OpenRouterChatComponent,
   ],
   imports: [
     BrowserModule,

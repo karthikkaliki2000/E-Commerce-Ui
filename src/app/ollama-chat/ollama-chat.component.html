@@ -1,0 +1,42 @@
+<div class="ollama-chat-container">
+    <div class="ollama-chat-head">
+        <h1>Ollama Assistant</h1>
+    </div>
+
+    <div class="ollama-chat-history">
+        <div *ngFor="let chat of chatHistory" class="chat-message"
+            [ngClass]="{'user': chat.isUser, 'bot': !chat.isUser}">
+            <div class="chat-bubble">
+                <div class="message-content">
+                    <div class="message-text">
+                        <strong *ngIf="chat.isUser">You:</strong>
+                        <strong *ngIf="!chat.isUser">Ollama says:</strong>
+                        <ng-container *ngIf="!chat.isUser && chat.bot; else plainText">
+                            <span [innerHTML]="chat.bot"></span>
+                        </ng-container>
+                        <ng-template #plainText>
+                            <span>{{ chat.text }}</span>
+                        </ng-template>
+                    </div>
+                    <div class="timestamp">{{ chat.time | date:'shortTime' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div #bottomOfChat></div>
+
+    <div class="input-area">
+        <textarea #chatInput [(ngModel)]="message" placeholder="Type your question..." [disabled]="loadingOllama"
+            (keydown)="onInputKeydown($event)" aria-label="Type your question"></textarea>
+        <button (click)="askOllama()" [disabled]="loadingOllama">
+            <ng-container *ngIf="!loadingOllama">Ask</ng-container>
+            <ng-container *ngIf="loadingOllama">
+                <span class="spinner"></span> Loading...
+            </ng-container>
+        </button>
+    </div>
+
+    <div class="chatbot-bottom-bar">
+        <!-- Clear History button removed -->
+    </div>
+</div>
