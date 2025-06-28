@@ -96,7 +96,8 @@ export class OpenRouterChatComponent implements OnInit, AfterViewInit {
     const params = { message: userMsg };
     this.http.get(apiUrl, {
       params,
-      responseType: 'text'
+      responseType: 'text',
+      headers: { 'No-Auth': 'True' }
     }).subscribe({
       next: res => {
         let cleaned = (res as string).replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
