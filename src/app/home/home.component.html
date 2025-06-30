@@ -8,10 +8,22 @@
                 </div>
                 <div class="product-details">
                     <h2 class="product-title">{{p.productName}}</h2>
-                    <p class="product-description"
-                        [ngClass]="{'single-line-ellipsis': !expandedDescriptions.has(i), 'expanded-description': expandedDescriptions.has(i)}"
-                        [title]="!expandedDescriptions.has(i) ? p.productDescription : null">
-                        {{p.productDescription || ''}}
+                    <p class="product-description">
+                        <ng-container *ngIf="!expandedDescriptions.has(i); else expandedDesc">
+                            {{ getFirstTwoWords(p.productDescription || '') }}
+                            <span *ngIf="(p.productDescription || '').split(' ').length > 2">
+                                <a href="#" class="read-more-link"
+                                    (click)="$event.preventDefault(); toggleDescription(i)">view more</a>
+                            </span>
+                        </ng-container>
+                        <ng-template #expandedDesc>
+                            <span class="expanded-description-scroll">
+                                {{ getFirstTwoWords(p.productDescription || '') }}
+                                {{ getMiddleWords(p.productDescription || '') }}
+                                {{ getLastWord(p.productDescription || '') }} <a href="#" class="view-less-link"
+                                    (click)="$event.preventDefault(); toggleDescription(i)">view less</a>
+                            </span>
+                        </ng-template>
                     </p>
                     <div class="product-prices">
                         <span class="discounted-price">₹{{p.productDiscountedPrice}}</span>

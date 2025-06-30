@@ -92,4 +92,23 @@ export class HomeComponent implements OnInit{
     this.router.navigate(['/productViewDetails', {productId: productId}]);
   }
 
+  getFirstTwoWords(desc: string): string {
+    if (!desc) return '';
+    const words = desc.split(' ');
+    return words.slice(0, 2).join(' ');
+  }
+
+  getMiddleWords(desc: string): string {
+    if (!desc) return '';
+    const words = desc.split(' ');
+    if (words.length <= 3) return '';
+    return words.slice(2, -1).join(' ');
+  }
+
+  getLastWord(desc: string): string {
+    if (!desc) return '';
+    const words = desc.split(' ');
+    return words.length > 0 ? words[words.length - 1] : '';
+  }
+
 }
