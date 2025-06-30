@@ -28,7 +28,10 @@
                     </b>
                 </div>
                 <div class="mt-3">
-                    <button mat-raised-button color="warn" class="buy-btn text-center">Buy</button>
+                    <button mat-raised-button color="warn" class="buy-btn text-center" [disabled]="!product?.productId"
+                        (click)="buyProduct(product!.productId!)">
+                        Buy
+                    </button>
                 </div>
             </div>
         </div>

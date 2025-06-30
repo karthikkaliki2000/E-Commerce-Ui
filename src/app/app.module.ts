@@ -34,6 +34,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
 import { OpenRouterChatComponent } from './open-router-chat/open-router-chat.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { BuyProductComponent } from './buy-product/buy-product.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
     OllamaChatComponent,
     OpenRouterChatComponent,
     ProductDetailsComponent,
+    BuyProductComponent,
   ],
   imports: [
     BrowserModule,

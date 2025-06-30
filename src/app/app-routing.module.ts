@@ -11,6 +11,8 @@ import { ShowProductDetailsComponent } from './show-product-details/show-product
 import { ProductResolverService } from './_services/product-resolver.service';
 import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { BuyProductComponent } from './buy-product/buy-product.component';
+import { BuyProductResolverService } from './_services/buy-product-resolver.service';
 
 const routes: Routes = [
   {
@@ -62,8 +64,17 @@ const routes: Routes = [
     resolve: {
       product: ProductResolverService,
     },
-    
-  }
+
+  },
+  {
+    path: 'buyProduct',
+    component: BuyProductComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_USER'] },
+    resolve: {
+      productDetails: BuyProductResolverService,
+    },
+  },
 ];
 
 @NgModule({

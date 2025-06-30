@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../_model/product.model';
 
 @Component({
@@ -18,7 +18,7 @@ export class ProductDetailsComponent implements OnInit {
     console.log(this.product);
   }
 
-  constructor( private activatedRoute:ActivatedRoute) {
+  constructor( private activatedRoute:ActivatedRoute, private router:Router) {
    
 
   }
@@ -29,6 +29,16 @@ export class ProductDetailsComponent implements OnInit {
     const discounted = this.product.productDiscountedPrice || 0;
     if (actual === 0) return 0;
     return Math.round(((actual - discounted) / actual) * 100);
+  }
+
+  buyProduct(productId: number) {
+    this.router.navigate(['/buyProduct',
+     {
+      isSingleProductCheckout:true,
+      productId:productId
+     }
+    ]);
+    console.log("buy product");
   }
 
 }
