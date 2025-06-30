@@ -10,6 +10,7 @@ import { AddNewProductComponent } from './add-new-product/add-new-product.compon
 import { ShowProductDetailsComponent } from './show-product-details/show-product-details.component';
 import { ProductResolverService } from './_services/product-resolver.service';
 import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN'] },
   },
+  {
+    path: 'productViewDetails',
+    component: ProductDetailsComponent,
+    resolve: {
+      product: ProductResolverService,
+    },
+    
+  }
 ];
 
 @NgModule({

@@ -33,6 +33,7 @@ import { ShowProductImagesDialogComponent } from './show-product-images-dialog/s
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
 import { OpenRouterChatComponent } from './open-router-chat/open-router-chat.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { OpenRouterChatComponent } from './open-router-chat/open-router-chat.com
     ShowProductImagesDialogComponent,
     OllamaChatComponent,
     OpenRouterChatComponent,
+    ProductDetailsComponent,
   ],
   imports: [
     BrowserModule,

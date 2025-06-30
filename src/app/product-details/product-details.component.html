@@ -1,0 +1,36 @@
+<div class="container mt-5 product-details-container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card product-image-card p-3">
+                <img [src]="product?.productImages?.[selectedProductIndex]?.url" alt="product image"
+                    class="img-fluid main-image">
+            </div>
+            <div class="product-images-grid mt-4 d-flex justify-content-center">
+                <img *ngFor="let image of product?.productImages; let index = index" [src]="image?.url"
+                    alt="product image" class="img-fluid thumbnail-image"
+                    [class.active-thumbnail]="selectedProductIndex === index" (click)="selectedProductIndex = index">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="product-information">
+                <div class="product-heading">
+                    <h2> {{product?.productName}}</h2>
+                </div>
+                <div class="product-description">
+                    <h3>Description</h3>
+                    {{product?.productDescription}}
+                </div>
+                <div class="product-price mt-3">
+                    <b>Rs.{{product?.productDiscountedPrice}}</b>
+                    <b>
+                        <del>Rs.{{product?.productActualPrice}}</del>
+                        <span class="discount-percentage">({{productDiscountPercentage}}% off)</span>
+                    </b>
+                </div>
+                <div class="mt-3">
+                    <button mat-raised-button color="warn" class="buy-btn text-center">Buy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

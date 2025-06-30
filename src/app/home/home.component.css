@@ -1,85 +1,85 @@
 mat-grid-tile {
-    background-color: #f0f0f0;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
+  background-color: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
 }
 
 .home-product-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .product-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .product-prices {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .discounted-price {
-    color: #2e7d32;
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+  color: #2e7d32;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .actual-price {
-    color: #b0b0b0;
-    font-size: 1rem;
-    text-decoration: line-through;
-    font-weight: 500;
-    margin-left: 6px;
+  color: #b0b0b0;
+  font-size: 1rem;
+  text-decoration: line-through;
+  font-weight: 500;
+  margin-left: 6px;
 }
 
 .chat-fab {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    z-index: 1000;
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
 }
 
 .chat-dialog-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 1001;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1001;
 }
 
 .chat-dialog {
-    position: fixed;
-    bottom: 90px;
-    right: 32px;
-    width: 350px;
-    max-height: 500px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-    z-index: 1002;
-    display: flex;
-    flex-direction: column;
+  position: fixed;
+  bottom: 90px;
+  right: 32px;
+  width: 350px;
+  max-height: 500px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
 }
 
 .close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 .chatbot-bottom-bar {
@@ -150,7 +150,8 @@ mat-grid-tile {
   align-items: center;
 }
 
-.clear-history-btn:hover, .clear-history-btn:focus {
+.clear-history-btn:hover,
+.clear-history-btn:focus {
   background: #d32f2f;
   color: #fff;
   outline: none;
@@ -164,12 +165,58 @@ mat-grid-tile {
     gap: 0.5rem;
     padding: 0.5rem;
   }
+
   .clear-history-btn {
     width: 100%;
     margin-left: 0;
   }
+
   .chatbot-switcher {
     width: 100%;
     justify-content: flex-start;
   }
+}
+
+.single-line-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline;
+  width: auto;
+}
+
+.expanded-description {
+  max-height: 80px;
+  overflow-y: auto;
+  white-space: pre-line;
+  background: #fafafa;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+}
+
+.product-description {
+  font-size: 0.97rem;
+  font-weight: 400;
+  color: #444;
+  display: inline;
+}
+
+.read-more-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 0 0 0 6px;
+  font-size: 0.97rem;
+  font-weight: 500;
+  text-decoration: underline;
+  outline: none;
+  vertical-align: baseline;
+}
+
+.read-more-btn:hover,
+.read-more-btn:focus {
+  color: #0d47a1;
+  text-decoration: underline;
 }

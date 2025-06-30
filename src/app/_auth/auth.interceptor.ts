@@ -25,7 +25,11 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     const token = this.userAuthService.getToken();
-    req = this.addToken(req, token);
+    if(token){
+      req = this.addToken(req, token);
+    }
+   
+    console.log(req);
     return next.handle(req).pipe(
       catchError((error) => {
         if (error.status === 401) {
@@ -40,6 +44,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private addToken(req: HttpRequest<any>, token: string) {
     return req.clone({
+
       setHeaders: {
         Authorization: `Bearer ${token}`,
       },

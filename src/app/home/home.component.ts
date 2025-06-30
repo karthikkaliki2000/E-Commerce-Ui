@@ -6,6 +6,8 @@ import { Product } from '../_model/product.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OllamaChatComponent } from '../ollama-chat/ollama-chat.component';
 import { OpenRouterChatComponent } from '../open-router-chat/open-router-chat.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserAuthService } from '../_services/user-auth.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +19,13 @@ export class HomeComponent implements OnInit{
   constructor(
     private productService: ProductService,
     private imageProcessingService: ImageProcessingService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private userAuthService: UserAuthService,
+
+
+
   ) {}
   ngOnInit(): void {
    this.getAllProducts();
@@ -28,6 +36,7 @@ export class HomeComponent implements OnInit{
   selectedBot: 'ollama' | 'openrouter' = 'ollama';
   @ViewChild('ollamaChat') ollamaChat?: OllamaChatComponent;
   @ViewChild('openRouterChat') openRouterChat?: OpenRouterChatComponent;
+  expandedDescriptions = new Set<number>();
 
   public getAllProducts() {
     this.productService
@@ -69,6 +78,18 @@ export class HomeComponent implements OnInit{
     } else if (this.selectedBot === 'openrouter' && this.openRouterChat) {
       this.openRouterChat.clearHistory();
     }
+  }
+
+  toggleDescription(idx: number) {
+    if (this.expandedDescriptions.has(idx)) {
+      this.expandedDescriptions.delete(idx);
+    } else {
+      this.expandedDescriptions.add(idx);
+    }
+  }
+
+  showProductDetails(productId: number | undefined) {
+    this.router.navigate(['/productViewDetails', {productId: productId}]);
   }
 
 }
