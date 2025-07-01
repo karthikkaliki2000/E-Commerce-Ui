@@ -36,9 +36,49 @@
                 </form>
             </div>
             <div class="col-md-6">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat quibusdam quos ipsam soluta impedit
-                iure mollitia quisquam excepturi aut ullam, ipsum facilis! Nemo quis alias repellat esse aspernatur
-                dicta culpa?
+                <div class="card">
+                    <table class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody">
+                            <tr *ngFor="let item of productDetails">
+
+                                <td>{{item.productName}}</td>
+                                <td>{{item.productDiscountedPrice}}</td>
+                                <td>
+                                    <select #quantitySelect class="form-select"
+                                        [ngModel]="getQuantityForProduct(item.productId || 1)" name="quantity"
+                                        (change)="onQuantityChange(item.productId || 1, quantitySelect.value)">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </td>
+
+                                <td>
+                                    {{getTotalAmountForProduct(item.productId || 1, item.productDiscountedPrice)}}
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">Total Amount</td>
+                                <td>
+                                    {{getTotalAmountForAllProducts()}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>

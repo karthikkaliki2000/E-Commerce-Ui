@@ -13,6 +13,7 @@ import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { BuyProductComponent } from './buy-product/buy-product.component';
 import { BuyProductResolverService } from './_services/buy-product-resolver.service';
+import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,15 @@ const routes: Routes = [
       productDetails: BuyProductResolverService,
     },
   },
+  {
+    path: 'orderConfirmation',
+    component: OrderConfirmationComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_USER'] },
+    // resolve: {
+    //   orderDetails: OrderConfirmationResolverService,
+    // },
+  }
 ];
 
 @NgModule({

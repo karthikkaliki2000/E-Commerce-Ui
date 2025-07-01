@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit{
       .subscribe(
         (data: Product[]) => {
           this.products = data;
+          console.log('Home page product images:', this.products.map(p => p.productImages));
           console.log(data);
         },
 
@@ -88,8 +89,8 @@ export class HomeComponent implements OnInit{
     }
   }
 
-  showProductDetails(productId: number | undefined) {
-    this.router.navigate(['/productViewDetails', {productId: productId}]);
+  showProductDetails(productId: number | undefined, imageUrl: string | undefined) {
+    this.router.navigate(['/productViewDetails', {productId: productId, mainImageUrl: imageUrl?.toString()}]);
   }
 
   getFirstTwoWords(desc: string): string {

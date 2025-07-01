@@ -13,8 +13,15 @@ export class ProductDetailsComponent implements OnInit {
 
   selectedProductIndex=0;
   ngOnInit(): void {
-    
-    this.product=this.activatedRoute.snapshot.data['product'];
+    this.product = this.activatedRoute.snapshot.data['product'];
+    const mainImageUrl = this.activatedRoute.snapshot.paramMap.get('mainImageUrl');
+    if (mainImageUrl && this.product?.productImages) {
+      const idx = this.product.productImages.findIndex(img => img.url === mainImageUrl);
+      this.selectedProductIndex = idx !== -1 ? idx : 0;
+    } else {
+      this.selectedProductIndex = 0;
+    }
+    console.log('Details page product images:', this.product?.productImages);
     console.log(this.product);
   }
 

@@ -16,6 +16,7 @@ export class AddNewProductComponent implements OnInit {
   [x: string]: any;
 
   isNewProduct: boolean = true; // Flag to determine if it's a new product or editing an existing one
+  imagesChanged: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -29,6 +30,7 @@ export class AddNewProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.setGridCols();
+    this.imagesChanged = false;
 
     window.addEventListener('resize', () => {
       this.setGridCols();
@@ -148,26 +150,22 @@ export class AddNewProductComponent implements OnInit {
   onFileSelected(event: any) {
     if (event.target.files) {
       const file = event.target.files[0] || null;
-
-      // Implement your logic to handle the selected file here
-
       const fileHandle: FileHandle = {
         file: file,
         url: this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file)),
       };
-
-      // Add the file to the productImages array
-
       if (!this.product.productImages) {
         this.product.productImages = [];
       }
       this.product.productImages.push(fileHandle);
+      this.imagesChanged = true;
     }
   }
 
   removeImage(i: number): void {
     if (this.product.productImages && this.product.productImages.length > i) {
       this.product.productImages.splice(i, 1);
+      this.imagesChanged = true;
     } else {
       console.error('Invalid image index');
     }
@@ -195,6 +193,7 @@ export class AddNewProductComponent implements OnInit {
 
   filesDropped(fileHandle: FileHandle) {
     this.product.productImages?.push(fileHandle);
+    this.imagesChanged = true;
   }
 
   resetProduct() {
@@ -219,12 +218,18 @@ export class AddNewProductComponent implements OnInit {
     if (!this.product.productId) {
       return;
     }
+    const productToUpdate = { ...this.product };
+    if (!this.imagesChanged) {
+      delete productToUpdate.productImages;
+    }
+    const formData = this.prepareFormData(productToUpdate);
     this.productService
-      .updateProduct(this.product.productId, this.product)
+      .updateProduct(this.product.productId, formData)
       .subscribe(
         (response: Product) => {
           productForm.reset();
           this.product.productImages = [];
+          this.imagesChanged = false;
           this.snackBar.open('Product updated successfully!', 'Close', {
             duration: 3000,
             verticalPosition: 'top',

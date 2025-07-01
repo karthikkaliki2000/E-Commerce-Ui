@@ -28,7 +28,7 @@ export class ProductService {
     );
   }
 
-  updateProduct(productId: number, product: Product) {
+  updateProduct(productId: number, product: FormData) {
     return this.http.put<Product>(
       this.PRODUCT_API_PATH + '/product/update/' + productId,
       product

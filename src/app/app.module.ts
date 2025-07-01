@@ -35,6 +35,7 @@ import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
 import { OpenRouterChatComponent } from './open-router-chat/open-router-chat.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { BuyProductComponent } from './buy-product/buy-product.component';
+import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { BuyProductComponent } from './buy-product/buy-product.component';
     OpenRouterChatComponent,
     ProductDetailsComponent,
     BuyProductComponent,
+    OrderConfirmationComponent,
   ],
   imports: [
     BrowserModule,
