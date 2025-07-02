@@ -37,35 +37,46 @@ export class HomeComponent implements OnInit{
   @ViewChild('ollamaChat') ollamaChat?: OllamaChatComponent;
   @ViewChild('openRouterChat') openRouterChat?: OpenRouterChatComponent;
   expandedDescriptions = new Set<number>();
+  pageNumber = 0;
+  pageSize = 12;
+  isLoading = false;
+  hasMoreProducts = true;
+  searchKey: string = '';
 
   public getAllProducts() {
+    this.isLoading = true;
     this.productService
-      .getAllProducts()
+      .getAllProducts(this.pageNumber, this.pageSize, this.searchKey)
       .pipe(
         tap((rawProducts) =>
           console.log('Raw products from API:', rawProducts)
         ),
         map((x: Product[], i: number) => {
-          //First map will take entire products array
-          return x.map(
-            (
-              product,
-              index //second map will take single element of products array
-            ) => this.imageProcessingService.createImages(product)
-          );
-        }) // This will return an array of products with images processed
+          return x.map((product, index) => this.imageProcessingService.createImages(product));
+        })
       )
       .subscribe(
         (data: Product[]) => {
-          this.products = data;
+          if (data.length < this.pageSize) {
+            this.hasMoreProducts = false;
+          }
+          this.products = [...this.products, ...data];
+          this.pageNumber++;
+          this.isLoading = false;
           console.log('Home page product images:', this.products.map(p => p.productImages));
           console.log(data);
         },
-
         (error: HttpErrorResponse) => {
           console.log(error);
+          this.isLoading = false;
         }
       );
+  }
+
+  loadMore() {
+    if (!this.isLoading && this.hasMoreProducts) {
+      this.getAllProducts();
+    }
   }
 
   openChatDialog() {
@@ -90,7 +101,7 @@ export class HomeComponent implements OnInit{
   }
 
   showProductDetails(productId: number | undefined, imageUrl: string | undefined) {
-    this.router.navigate(['/productViewDetails', {productId: productId, mainImageUrl: imageUrl?.toString()}]);
+    this.router.navigate(['/productViewDetails', productId], { queryParams: { mainImageUrl: imageUrl?.toString() } });
   }
 
   getFirstTwoWords(desc: string): string {
@@ -110,6 +121,13 @@ export class HomeComponent implements OnInit{
     if (!desc) return '';
     const words = desc.split(' ');
     return words.length > 0 ? words[words.length - 1] : '';
+  }
+
+  onSearch() {
+    this.products = [];
+    this.pageNumber = 0;
+    this.hasMoreProducts = true;
+    this.getAllProducts();
   }
 
 }

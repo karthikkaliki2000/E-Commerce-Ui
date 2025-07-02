@@ -1,4 +1,22 @@
 <div class="container mt-5">
+    <div class="search-bar-container mb-4 justify-content-center">
+        <mat-card class="search-card">
+            <div class="d-flex align-items-center gap-2 search-bar-row">
+                <mat-form-field appearance="outline" class="flex-grow-1 mb-0 search-input-field">
+                    <mat-label>Search for products</mat-label>
+                    <input type="text" matInput [(ngModel)]="searchKey" name="searchKey" id="searchKey"
+                        placeholder="Search Product" (keyup.enter)="onSearch()">
+                    <button *ngIf="searchKey" mat-icon-button matSuffix aria-label="Clear"
+                        (click)="searchKey=''; onSearch();">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <button mat-raised-button color="primary" class="search-btn" (click)="onSearch()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+        </mat-card>
+    </div>
     <table mat-table [dataSource]="products" class="mat-elevation-z8">
 
         <!--- Note that these columns can be defined in any order.
@@ -73,4 +91,12 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <div class="d-flex justify-content-center mt-4">
+        <button mat-raised-button color="primary" class="load-more-btn" (click)="loadMore()"
+            [disabled]="isLoading || !hasMoreProducts" *ngIf="hasMoreProducts">
+            <span *ngIf="!isLoading">Load More</span>
+            <mat-progress-spinner *ngIf="isLoading" diameter="24" mode="indeterminate"></mat-progress-spinner>
+        </button>
+        <div *ngIf="!hasMoreProducts" class="text-muted mt-2">No more products to load.</div>
+    </div>
 </div>

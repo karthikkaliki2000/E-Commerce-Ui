@@ -24,7 +24,7 @@ mat-grid-tile {
   height: 100%;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 16px 8px 16px 8px;
   overflow: hidden;
 }
@@ -275,4 +275,120 @@ mat-grid-tile {
   color: #444;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   vertical-align: middle;
+}
+
+.load-more-btn {
+  min-width: 160px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.load-more-btn[disabled] {
+  background: #e0e0e0 !important;
+  color: #aaa !important;
+  cursor: not-allowed;
+}
+
+.mat-progress-spinner {
+  margin-left: 8px;
+}
+
+.text-muted {
+  color: #888;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+}
+
+.search-card {
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  background-color: #ffffff;
+}
+
+.search-bar-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.search-input-field {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-field .mat-form-field-wrapper {
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.search-btn {
+  white-space: nowrap;
+  height: 56px;
+  min-width: 56px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  background: #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+  border-radius: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
+  border: none;
+  padding: 0;
+  overflow: visible;
+}
+
+.search-btn mat-icon {
+  font-size: 2.2rem;
+  color: #fff;
+  background: transparent;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  width: 2.2em;
+  height: 2.2em;
+}
+
+.search-btn:hover {
+  background: #1251a5;
+}
+
+.search-btn:hover mat-icon {
+  background: transparent;
+  color: #fff;
+}
+
+::ng-deep .mat-form-field-outline {
+  border-radius: 6px;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: #1976d2;
 }

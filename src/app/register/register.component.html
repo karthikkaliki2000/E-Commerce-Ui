@@ -1,0 +1,33 @@
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; background: #f5f7fa;">
+    <div class="card shadow-lg p-4 register-card">
+        <div class="text-center mb-4">
+            <span class="register-icon">
+                <i class="material-icons">person_add</i>
+            </span>
+            <h3 class="mt-2 mb-0 register-title">Create Account</h3>
+            <p class="text-muted mb-0">Please fill in the details to register</p>
+        </div>
+        <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+            <mat-form-field appearance="outline" class="w-100 mb-3">
+                <mat-label>Username</mat-label>
+                <input type="text" matInput ngModel name="userName" id="userName" placeholder="Username" required />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100 mb-3">
+                <mat-label>First Name</mat-label>
+                <input type="text" matInput ngModel name="userFirstName" id="userFirstName" placeholder="First Name"
+                    required />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100 mb-3">
+                <mat-label>Last Name</mat-label>
+                <input type="text" matInput ngModel name="userLastName" id="userLastName" placeholder="Last Name"
+                    required />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100 mb-3">
+                <mat-label>Password</mat-label>
+                <input type="password" matInput ngModel name="userPassword" id="userPassword" placeholder="Password"
+                    required />
+            </mat-form-field>
+            <button type="submit" mat-raised-button color="primary" class="w-100 mb-2 register-btn">Register</button>
+        </form>
+    </div>
+</div>

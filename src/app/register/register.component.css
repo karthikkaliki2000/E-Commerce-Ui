@@ -1,0 +1,33 @@
+.register-card {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.register-icon {
+    font-size: 3rem;
+    color: #1976d2;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.register-title {
+    font-weight: 600;
+    color: #1976d2;
+}
+
+.register-btn {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+}
+
+.mat-form-field {
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+body {
+    background: #f5f7fa;
+}

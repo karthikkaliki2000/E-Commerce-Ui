@@ -21,6 +21,11 @@ export class ShowProductDetailsComponent implements OnInit {
     private router: Router // Assuming you have a router
   ) {}
   products: Product[] = [];
+  pageNumber = 0;
+  pageSize = 12;
+  isLoading = false;
+  hasMoreProducts = true;
+  searchKey: string = '';
 
   displayedColumns: string[] = [
     'Id',
@@ -38,32 +43,38 @@ export class ShowProductDetailsComponent implements OnInit {
   }
 
   public getAllProducts() {
+    this.isLoading = true;
     this.productService
-      .getAllProducts()
+      .getAllProducts(this.pageNumber, this.pageSize, this.searchKey)
       .pipe(
         tap((rawProducts) =>
           console.log('Raw products from API:', rawProducts)
         ),
         map((x: Product[], i: number) => {
-          //First map will take entire products array
-          return x.map(
-            (
-              product,
-              index //second map will take single element of products array
-            ) => this.imageProcessingService.createImages(product)
-          );
-        }) // This will return an array of products with images processed
+          return x.map((product, index) => this.imageProcessingService.createImages(product));
+        })
       )
       .subscribe(
         (data: Product[]) => {
-          this.products = data;
+          if (data.length < this.pageSize) {
+            this.hasMoreProducts = false;
+          }
+          this.products = [...this.products, ...data];
+          this.pageNumber++;
+          this.isLoading = false;
           console.log(data);
         },
-
         (error: HttpErrorResponse) => {
           console.log(error);
+          this.isLoading = false;
         }
       );
+  }
+
+  loadMore() {
+    if (!this.isLoading && this.hasMoreProducts) {
+      this.getAllProducts();
+    }
   }
 
   deleteProduct(productId: any) {
@@ -92,5 +103,12 @@ export class ShowProductDetailsComponent implements OnInit {
       width: '800px',
       height: '500px',
     });
+  }
+
+  onSearch() {
+    this.products = [];
+    this.pageNumber = 0;
+    this.hasMoreProducts = true;
+    this.getAllProducts();
   }
 }

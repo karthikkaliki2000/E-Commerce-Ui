@@ -45,11 +45,16 @@ export class BuyProductComponent implements OnInit{
     if (form.valid) {
       // TODO: Implement order submission logic
       console.log('Order placed:', this.orderDetails);
-      this.productService.placeOrder(this.orderDetails).subscribe((response:any)=>{
-        console.log(response);
-        this.router.navigate(['/orderConfirmation']);
-       
-      }); 
+      this.productService.placeOrder(this.orderDetails).subscribe({
+        next: (response: any) => {
+          console.log("Order placed successfully---->", response);
+          this.router.navigate(['/orderConfirmation']);
+        },
+        error: (err) => {
+          console.error("Order placement failed", err);
+          alert("Order placement failed: " + (err?.error?.message || err.message || 'Unknown error'));
+        }
+      });
     } else {
       console.log('Form is invalid');
     }

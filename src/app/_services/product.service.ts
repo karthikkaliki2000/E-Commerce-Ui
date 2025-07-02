@@ -18,8 +18,12 @@ export class ProductService {
     );
   }
 
-  public getAllProducts() {
-    return this.http.get<Product[]>(this.PRODUCT_API_PATH + '/product/all');
+  public getAllProducts(pageNumber: number = 0, pageSize: number = 12, searchKey: string = '') {
+    let url = `${this.PRODUCT_API_PATH}/product/all?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if (searchKey) {
+      url += `&searchKey=${encodeURIComponent(searchKey)}`;
+    }
+    return this.http.get<Product[]>(url);
   }
 
   deleteProduct(productId: number) {
@@ -48,6 +52,7 @@ export class ProductService {
   }
 
   placeOrder(orderDetails: OrderDetails) {
+    console.log("Order details---->"+orderDetails);
     return this.http.post(this.PRODUCT_API_PATH + '/order/place', orderDetails);
   }
 }

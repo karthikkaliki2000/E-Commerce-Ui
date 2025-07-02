@@ -14,6 +14,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { BuyProductComponent } from './buy-product/buy-product.component';
 import { BuyProductResolverService } from './_services/buy-product-resolver.service';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
+import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {
@@ -81,10 +82,12 @@ const routes: Routes = [
     component: OrderConfirmationComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_USER'] },
-    // resolve: {
-    //   orderDetails: OrderConfirmationResolverService,
-    // },
-  }
+  
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+  },
 ];
 
 @NgModule({

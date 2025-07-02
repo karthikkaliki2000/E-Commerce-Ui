@@ -31,11 +31,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ShowProductImagesDialogComponent } from './show-product-images-dialog/show-product-images-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
 import { OllamaChatComponent } from './ollama-chat/ollama-chat.component';
 import { OpenRouterChatComponent } from './open-router-chat/open-router-chat.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { BuyProductComponent } from './buy-product/buy-product.component';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,7 @@ import { OrderConfirmationComponent } from './order-confirmation/order-confirmat
     ProductDetailsComponent,
     BuyProductComponent,
     OrderConfirmationComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +77,8 @@ import { OrderConfirmationComponent } from './order-confirmation/order-confirmat
     MatIconModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
   ],
   providers: [
     UserService,
