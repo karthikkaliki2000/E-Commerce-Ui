@@ -55,4 +55,8 @@ export class ProductService {
     console.log("Order details---->"+orderDetails);
     return this.http.post(this.PRODUCT_API_PATH + '/order/place', orderDetails);
   }
+
+  public addToCart(productId: number, quantity: number) {
+    return this.http.post(this.PRODUCT_API_PATH + '/cart/add/' + productId + '/' + quantity, null);
+  }
 }

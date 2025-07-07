@@ -14,6 +14,8 @@ export class ProductDetailsComponent implements OnInit {
   product: Product | undefined;
 
   selectedProductIndex=0;
+  quantity: number = 1;
+
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
@@ -47,6 +49,27 @@ export class ProductDetailsComponent implements OnInit {
      }
     ]);
     console.log("buy product");
+  }
+
+  addToCart(productId: number, quantity: number) {
+    this.productService.addToCart(productId, quantity).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  incrementQuantity() {
+    this.quantity++;
+  }
+
+  decrementQuantity() {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
   }
 
 }
