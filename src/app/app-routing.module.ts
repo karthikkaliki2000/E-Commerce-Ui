@@ -61,7 +61,7 @@ const routes: Routes = [
     data: { roles: ['ROLE_ADMIN'] },
   },
   {
-    path: 'productViewDetails',
+    path: 'productViewDetails/:id',
     component: ProductDetailsComponent,
     resolve: {
       product: ProductResolverService,

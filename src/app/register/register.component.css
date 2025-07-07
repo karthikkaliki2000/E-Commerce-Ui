@@ -31,3 +31,29 @@
 body {
     background: #f5f7fa;
 }
+
+@media (max-width: 600px) {
+    .register-card {
+        max-width: 100vw !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+    }
+
+    .register-icon {
+        font-size: 2.2rem !important;
+    }
+
+    .register-title {
+        font-size: 1.2rem !important;
+    }
+
+    .mat-form-field {
+        font-size: 1rem !important;
+    }
+
+    .register-btn {
+        font-size: 1rem !important;
+        padding: 10px 0 !important;
+    }
+}

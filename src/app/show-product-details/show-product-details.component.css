@@ -117,3 +117,33 @@ table {
 ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
     color: #1976d2;
 }
+
+@media (max-width: 600px) {
+
+    .mat-elevation-z8,
+    table,
+    .mat-table {
+        display: block;
+        width: 100vw;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .mat-header-row,
+    .mat-row,
+    tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    th,
+    td,
+    .mat-header-cell,
+    .mat-cell {
+        min-width: 120px;
+        word-break: break-word;
+        font-size: 0.95rem;
+        padding: 6px 4px;
+    }
+}

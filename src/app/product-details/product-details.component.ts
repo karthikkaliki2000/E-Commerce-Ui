@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../_model/product.model';
+import { ProductService } from '../_services/product.service';
+import { ImageProcessingService } from '../_services/image-processing.service';
 
 @Component({
   selector: 'app-product-details',
@@ -13,19 +15,18 @@ export class ProductDetailsComponent implements OnInit {
 
   selectedProductIndex=0;
   ngOnInit(): void {
-    this.product = this.activatedRoute.snapshot.data['product'];
-    const mainImageUrl = this.activatedRoute.snapshot.queryParamMap.get('mainImageUrl');
-    if (mainImageUrl && this.product?.productImages) {
-      const idx = this.product.productImages.findIndex(img => img.url === mainImageUrl);
-      this.selectedProductIndex = idx !== -1 ? idx : 0;
-    } else {
-      this.selectedProductIndex = 0;
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    if (id) {
+      this.productService.getProductById(+id).subscribe(product => {
+        this.product = this.imageProcessingService.createImages(product);
+        this.selectedProductIndex = 0;
+        console.log('Details page product images:', this.product?.productImages);
+        console.log(this.product);
+      });
     }
-    console.log('Details page product images:', this.product?.productImages);
-    console.log(this.product);
   }
 
-  constructor( private activatedRoute:ActivatedRoute, private router:Router) {
+  constructor( private activatedRoute:ActivatedRoute, private router:Router, private productService: ProductService, private imageProcessingService: ImageProcessingService) {
    
 
   }

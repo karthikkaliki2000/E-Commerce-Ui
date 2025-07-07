@@ -8,6 +8,7 @@ import { OllamaChatComponent } from '../ollama-chat/ollama-chat.component';
 import { OpenRouterChatComponent } from '../open-router-chat/open-router-chat.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserAuthService } from '../_services/user-auth.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-home',
@@ -23,12 +24,20 @@ export class HomeComponent implements OnInit{
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private userAuthService: UserAuthService,
-
-
-
+    private breakpointObserver: BreakpointObserver,
   ) {}
   ngOnInit(): void {
    this.getAllProducts();
+   this.breakpointObserver.observe([
+      Breakpoints.Handset,
+      Breakpoints.Tablet
+    ]).subscribe(result => {
+      if (result.matches) {
+        this.gridCols = 1;
+      } else {
+        this.gridCols = 4;
+      }
+    });
   }
 
   products: Product[] = [];
@@ -42,6 +51,7 @@ export class HomeComponent implements OnInit{
   isLoading = false;
   hasMoreProducts = true;
   searchKey: string = '';
+  gridCols = 4; // default
 
   public getAllProducts() {
     this.isLoading = true;
@@ -101,7 +111,7 @@ export class HomeComponent implements OnInit{
   }
 
   showProductDetails(productId: number | undefined, imageUrl: string | undefined) {
-    this.router.navigate(['/productViewDetails', productId], { queryParams: { mainImageUrl: imageUrl?.toString() } });
+    this.router.navigate(['/productViewDetails', productId]);
   }
 
   getFirstTwoWords(desc: string): string {

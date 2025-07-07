@@ -41,4 +41,10 @@ export class HeaderComponent {
   onAddProductClick() {
     this.timestamp = Date.now();
   }
+
+  showMobileMenu = false;
+
+  toggleMobileMenu() {
+    this.showMobileMenu = !this.showMobileMenu;
+  }
 }
