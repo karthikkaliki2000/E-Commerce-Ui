@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { OllamaChatService } from '../_services/ollama-chat.service';
 
 interface OllamaChatHistoryItem {
   text: string;
@@ -26,7 +27,7 @@ export class OllamaChatComponent implements OnInit, AfterViewInit {
   streamingBotMessage: string = '';
   streamingTimeout: any;
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer, private ollamaChatService: OllamaChatService) {}
 
   ngOnInit() {
     this.loadHistory();
@@ -109,26 +110,23 @@ export class OllamaChatComponent implements OnInit, AfterViewInit {
     this.message = '';
     setTimeout(() => this.scrollToBottom(), 0);
     this.focusInput();
-    const apiUrl = 'http://localhost:9090/api/ollama/ask';
-    const params = { message: userMsg };
-    this.http.get(apiUrl, {
-      params,
-      responseType: 'text'
-    }).subscribe({
-      next: res => {
-        let cleaned = (res as string).replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-        const concise = this.getConciseAnswer(cleaned);
-        this.startStreamingBotMessage(concise);
-      },
-      error: err => {
-        this.chatHistory.push({ text: 'Error: ' + err.message, isUser: false, time: new Date(), error: true });
-        this.saveChatHistory();
-        this.response = 'Error: ' + err.message;
-        this.loadingOllama = false;
-        setTimeout(() => this.scrollToBottom(), 0);
-        this.focusInput();
-      }
-    });
+    const historyTexts = this.chatHistory.filter(h => h.isUser).map(h => h.text);
+    this.ollamaChatService.askOllama(userMsg, historyTexts)
+      .subscribe({
+        next: res => {
+          let cleaned = (res as string).replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+          const concise = this.getConciseAnswer(cleaned);
+          this.startStreamingBotMessage(concise);
+        },
+        error: err => {
+          this.chatHistory.push({ text: 'Error: ' + err.message, isUser: false, time: new Date(), error: true });
+          this.saveChatHistory();
+          this.response = 'Error: ' + err.message;
+          this.loadingOllama = false;
+          setTimeout(() => this.scrollToBottom(), 0);
+          this.focusInput();
+        }
+      });
   }
 
   startStreamingBotMessage(fullText: string) {

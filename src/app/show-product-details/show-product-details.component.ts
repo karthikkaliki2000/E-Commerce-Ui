@@ -5,7 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { ShowProductImagesDialogComponent } from '../show-product-images-dialog/show-product-images-dialog.component';
 import { ImageProcessingService } from '../_services/image-processing.service';
-import { map, tap } from 'rxjs';
+import { map, tap, debounceTime, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -26,6 +26,7 @@ export class ShowProductDetailsComponent implements OnInit {
   isLoading = false;
   hasMoreProducts = true;
   searchKey: string = '';
+  searchKeyChanged: Subject<string> = new Subject<string>();
 
   displayedColumns: string[] = [
     'Id',
@@ -40,6 +41,12 @@ export class ShowProductDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllProducts();
+    this.searchKeyChanged.pipe(debounceTime(300)).subscribe(() => {
+      this.products = [];
+      this.pageNumber = 0;
+      this.hasMoreProducts = true;
+      this.getAllProducts();
+    });
   }
 
   public getAllProducts() {
@@ -110,5 +117,9 @@ export class ShowProductDetailsComponent implements OnInit {
     this.pageNumber = 0;
     this.hasMoreProducts = true;
     this.getAllProducts();
+  }
+
+  onSearchKeyChange(search: string) {
+    this.searchKeyChanged.next(search);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ProductService } from '../_services/product.service';
-import { map, tap } from 'rxjs';
+import { map, tap, debounceTime, Subject } from 'rxjs';
 import { ImageProcessingService } from '../_services/image-processing.service';
 import { Product } from '../_model/product.model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -26,6 +26,9 @@ export class HomeComponent implements OnInit{
     private userAuthService: UserAuthService,
     private breakpointObserver: BreakpointObserver,
   ) {}
+
+  searchKeyChanged: Subject<string> = new Subject<string>();
+
   ngOnInit(): void {
    this.getAllProducts();
    this.breakpointObserver.observe([
@@ -37,6 +40,12 @@ export class HomeComponent implements OnInit{
       } else {
         this.gridCols = 4;
       }
+    });
+   this.searchKeyChanged.pipe(debounceTime(300)).subscribe(() => {
+      this.products = [];
+      this.pageNumber = 0;
+      this.hasMoreProducts = true;
+      this.getAllProducts();
     });
   }
 
@@ -138,6 +147,10 @@ export class HomeComponent implements OnInit{
     this.pageNumber = 0;
     this.hasMoreProducts = true;
     this.getAllProducts();
+  }
+
+  onSearchKeyChange(search: string) {
+    this.searchKeyChanged.next(search);
   }
 
 }
