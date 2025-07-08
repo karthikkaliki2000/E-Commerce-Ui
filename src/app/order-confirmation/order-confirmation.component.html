@@ -12,8 +12,41 @@
                 <div class="card bg-light mb-4">
                     <div class="card-body">
                         <h5 class="card-title mb-3">Order Details</h5>
-                        <p class="mb-1">We appreciate your business. You will receive an email confirmation shortly.</p>
-                        <!-- You can add more order details here if available -->
+                        <ng-container *ngIf="orderDetails && productDetails.length > 0; else noOrder">
+                            <div class="mb-2"><strong>Name:</strong> {{orderDetails.fullName}}</div>
+                            <div class="mb-2"><strong>Email:</strong> {{orderDetails.email}}</div>
+                            <div class="mb-2"><strong>Address:</strong> {{orderDetails.fullAddress}}</div>
+                            <div class="mb-2"><strong>Contact Number:</strong> {{orderDetails.contactNumber}}</div>
+                            <div class="mb-2" *ngIf="orderDetails.alternativeContactNumber"><strong>Alternate
+                                    Contact:</strong> {{orderDetails.alternativeContactNumber}}</div>
+                            <hr>
+                            <h6>Products Ordered:</h6>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of orderDetails.orderProductQuantities">
+                                        <td>{{getProductName(item.productId)}}</td>
+                                        <td>{{item.quantity}}</td>
+                                        <td>{{getProductPrice(item.productId) | currency}}</td>
+                                        <td>{{getProductPrice(item.productId) * item.quantity | currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="mt-2 text-end">
+                                <strong>Total Amount:</strong>
+                                {{getTotalAmount() | currency}}
+                            </div>
+                        </ng-container>
+                        <ng-template #noOrder>
+                            <p>No order details found.</p>
+                        </ng-template>
                     </div>
                 </div>
             </div>

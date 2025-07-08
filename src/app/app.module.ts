@@ -39,6 +39,9 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { BuyProductComponent } from './buy-product/buy-product.component';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 import { RegisterComponent } from './register/register.component';
+import { CartComponent } from './cart/cart.component';
+import { OrderHistoryComponent } from './order-history/order-history.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +62,9 @@ import { RegisterComponent } from './register/register.component';
     BuyProductComponent,
     OrderConfirmationComponent,
     RegisterComponent,
+    CartComponent,
+    OrderHistoryComponent,
+    OrderDetailsComponent,
   ],
   imports: [
     BrowserModule,

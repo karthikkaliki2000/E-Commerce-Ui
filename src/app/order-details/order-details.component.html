@@ -1,0 +1,42 @@
+<div class="container mt-5">
+  <div class="card p-4 shadow-lg">
+    <h2 class="mb-4">Order Details</h2>
+    <div *ngIf="loading" class="text-center my-4">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    <ng-container *ngIf="order && !loading && !error">
+      <div class="mb-2"><strong>Order ID:</strong> {{order.orderId}}</div>
+      <div class="mb-2"><strong>Name:</strong> {{order.fullName}}</div>
+      <div class="mb-2"><strong>Email:</strong> {{order.email}}</div>
+      <div class="mb-2"><strong>Address:</strong> {{order.fullAddress}}</div>
+      <div class="mb-2"><strong>Contact Number:</strong> {{order.contactNumber}}</div>
+      <div class="mb-2" *ngIf="order.alternativeContactNumber"><strong>Alternate Contact:</strong> {{order.alternativeContactNumber}}</div>
+      <div class="mb-2"><strong>Status:</strong> {{order.orderStatus}}</div>
+      <div class="mb-2"><strong>Date:</strong> {{order.orderDate | date:'medium'}}</div>
+      <hr>
+      <h6>Products Ordered:</h6>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of order.products">
+            <td>{{item.productName}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.unitPrice | currency}}</td>
+            <td>{{item.unitPrice * item.quantity | currency}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-2 text-end">
+        <strong>Total Amount:</strong> {{order.totalPrice | currency}}
+      </div>
+    </ng-container>
+  </div>
+</div> 

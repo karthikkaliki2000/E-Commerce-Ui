@@ -1,0 +1,73 @@
+<div *ngIf="loading" class="text-center my-3">
+    <mat-spinner diameter="40"></mat-spinner>
+</div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<div class="container mt-5">
+    <div class="table-responsive">
+        <table mat-table [dataSource]="carts" class="mat-elevation-z8">
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef> Product Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.product.productName}} </td>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="Description">
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td mat-cell *matCellDef="let element"> {{element.product.productDescription}} </td>
+            </ng-container>
+
+            <!-- Quantity Column -->
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                <td mat-cell *matCellDef="let element">
+                    <input #qtyInput type="number" min="1" [value]="element.quantity"
+                        (change)="updateQuantity(element.cartId, +qtyInput.value)" style="width: 60px;" />
+                </td>
+            </ng-container>
+
+            <!-- Price Column -->
+            <ng-container matColumnDef="Price">
+                <th mat-header-cell *matHeaderCellDef> Unit Price </th>
+                <td mat-cell *matCellDef="let element"> {{element.product.productDiscountedPrice}} </td>
+            </ng-container>
+
+            <!-- Total Price Column (calculated) -->
+            <ng-container matColumnDef="totalPrice">
+                <th mat-header-cell *matHeaderCellDef> Total </th>
+                <td mat-cell *matCellDef="let element"> {{element.product.productDiscountedPrice * element.quantity}}
+                </td>
+            </ng-container>
+
+            <!-- Remove Column -->
+            <ng-container matColumnDef="Remove">
+                <th mat-header-cell *matHeaderCellDef> Remove </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button color="warn" (click)="removeItem(element.cartId)">Remove</button>
+                </td>
+            </ng-container>
+
+            <!-- Checkout Column -->
+            <ng-container matColumnDef="Checkout">
+                <th mat-header-cell *matHeaderCellDef> Checkout </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button color="primary"
+                        (click)="checkoutSingleProduct(element.product.productId)">Checkout</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+    </div>
+    <div class="text-end mt-2">
+        <strong>Total: {{ cartTotal }}</strong>
+    </div>
+    <div class="d-flex justify-content-between mt-3 gap-2 flex-wrap">
+        <button mat-button color="warn" (click)="clearCart()">Empty Cart</button>
+        <button mat-button color="primary" (click)="continueShopping()">Continue Shopping</button>
+        <button mat-raised-button color="primary" (click)="checkoutAllProducts()">Checkout All</button>
+    </div>
+</div>

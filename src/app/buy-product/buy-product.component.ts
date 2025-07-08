@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Product } from '../_model/product.model';
 import { ProductService } from '../_services/product.service';
 import { Router } from '@angular/router';
+import { CheckoutDataService } from '../_services/checkout-data.service';
 
 export interface OrderProductQuantity {
   productId: number;
@@ -18,20 +19,22 @@ export interface OrderProductQuantity {
 })
 export class BuyProductComponent implements OnInit{
   ngOnInit(): void {
-  this.productDetails= this.activatedRoute.snapshot.data['productDetails'];
-  this.productDetails.forEach(product => {
-    this.orderDetails.orderProductQuantities.push({
-      productId: product.productId!,
-      quantity: 1
+    this.productDetails = this.activatedRoute.snapshot.data['productDetails'];
+    const checkoutItems = this.checkoutDataService.getCheckoutItems();
+    this.productDetails.forEach(product => {
+      const found = checkoutItems.find(item => item.productId === product.productId);
+      this.orderDetails.orderProductQuantities.push({
+        productId: product.productId!,
+        quantity: found ? found.quantity : 1
+      });
     });
-  });
-  console.log(this.orderDetails);
-  console.log(this.productDetails);
+    console.log(this.orderDetails);
+    console.log(this.productDetails);
   }
 
   productDetails: Product[] = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private productService: ProductService, private router: Router) { }
+  constructor(private activatedRoute: ActivatedRoute, private productService: ProductService, private router: Router, private checkoutDataService: CheckoutDataService) { }
   orderDetails: OrderDetails = {
     fullName: '',
     fullAddress: '',
@@ -100,6 +103,8 @@ export class BuyProductComponent implements OnInit{
       return totalAmount; 
     }
     
-    
+    hasInvalidQuantities(): boolean {
+      return this.orderDetails.orderProductQuantities.some(q => !q.quantity || q.quantity <= 0);
+    }
   }
 

@@ -1,0 +1,35 @@
+<div class="container mt-5">
+    <div class="card p-4 shadow-lg">
+        <h2 class="mb-4">Order History</h2>
+        <div *ngIf="loading" class="text-center my-4">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+        <div *ngIf="!loading && !error && orders.length === 0" class="alert alert-info">
+            You have not placed any orders yet. Once you place an order, it will appear here!
+        </div>
+        <table *ngIf="orders.length > 0" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of orders">
+                    <td>{{order.orderId}}</td>
+                    <td>{{order.orderDate | date:'medium'}}</td>
+                    <td>{{order.orderStatus}}</td>
+                    <td>{{order.totalPrice | currency}}</td>
+                    <td>
+                        <button mat-raised-button color="primary" (click)="viewOrder(order.orderId)">View
+                            Details</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
