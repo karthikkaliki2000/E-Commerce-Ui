@@ -2,23 +2,62 @@
   <div class="card p-4 shadow-lg">
     <h2 class="mb-4">Order Details</h2>
     <div *ngIf="loading" class="text-center my-4">
-      <mat-spinner></mat-spinner>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <div class="skeleton-table mt-3"></div>
     </div>
     <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    <div *ngIf="!loading && !error && !order" class="alert alert-info text-center">
+      <img src="assets/empty-orders.svg" alt="No order" width="120" class="mb-2">
+      <div>Order not found.</div>
+    </div>
     <ng-container *ngIf="order && !loading && !error">
+      <div *ngIf="order.orderStatus === 'Order Cancelled'" class="alert alert-warning d-flex align-items-center mb-3">
+        <mat-icon color="warn" class="me-2">block</mat-icon>
+        <span>This order has been <strong>cancelled</strong>. If you have questions, please contact support.</span>
+      </div>
       <div class="mb-2"><strong>Order ID:</strong> {{order.orderId}}</div>
       <div class="mb-2"><strong>Name:</strong> {{order.fullName}}</div>
       <div class="mb-2"><strong>Email:</strong> {{order.email}}</div>
       <div class="mb-2"><strong>Address:</strong> {{order.fullAddress}}</div>
       <div class="mb-2"><strong>Contact Number:</strong> {{order.contactNumber}}</div>
-      <div class="mb-2" *ngIf="order.alternativeContactNumber"><strong>Alternate Contact:</strong> {{order.alternativeContactNumber}}</div>
-      <div class="mb-2"><strong>Status:</strong> {{order.orderStatus}}</div>
+      <div class="mb-2" *ngIf="order.alternativeContactNumber"><strong>Alternate Contact:</strong>
+        {{order.alternativeContactNumber}}</div>
+      <div class="mb-2">
+        <strong>Status:</strong>
+        <mat-chip [ngClass]="{
+          'chip-placed': order.orderStatus === 'Order Placed',
+          'chip-shipped': order.orderStatus === 'Order Shipped',
+          'chip-delivered': order.orderStatus === 'Order Delivered',
+          'chip-cancelled': order.orderStatus === 'Order Cancelled'
+        }">
+          {{statusLabel(order.orderStatus)}}
+        </mat-chip>
+      </div>
       <div class="mb-2"><strong>Date:</strong> {{order.orderDate | date:'medium'}}</div>
+      <!-- Order Status Timeline -->
+      <div class="mb-4">
+        <mat-horizontal-stepper [selectedIndex]="getStatusStepIndex(order.orderStatus)" linear>
+          <mat-step *ngFor="let step of orderStatusSteps; let i = index"
+            [completed]="i < getStatusStepIndex(order.orderStatus)">
+            <ng-template matStepLabel>{{ step | titlecase }}</ng-template>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </div>
       <hr>
       <h6>Products Ordered:</h6>
-      <table class="table table-sm">
+      <div class="mb-3 text-end">
+        <button mat-raised-button color="primary" (click)="reorder()">
+          <mat-icon>shopping_cart</mat-icon> Reorder
+        </button>
+        <button *ngIf="!!canCancelOrder(order.orderStatus)" mat-raised-button color="warn" (click)="cancelOrder()"
+          class="ms-2">
+          <mat-icon>cancel</mat-icon> Cancel Order
+        </button>
+      </div>
+      <table class="table table-sm table-responsive">
         <thead>
           <tr>
+            <th>Image</th>
             <th>Product</th>
             <th>Quantity</th>
             <th>Price</th>
@@ -27,16 +66,22 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of order.products">
+            <td>
+              <div class="product-image-wrapper">
+                <!-- <img *ngIf="p.productImages?.[0]?.url" [src]="p.productImages?.[0]?.url" alt="Product Image"
+                class="product-image"> -->
+              </div>
+            </td>
             <td>{{item.productName}}</td>
             <td>{{item.quantity}}</td>
-            <td>{{item.unitPrice | currency}}</td>
-            <td>{{item.unitPrice * item.quantity | currency}}</td>
+            <td>{{item.unitPrice | currency:'INR':'symbol':'1.2-2'}}</td>
+            <td>{{item.unitPrice * item.quantity | currency:'INR':'symbol':'1.2-2'}}</td>
           </tr>
         </tbody>
       </table>
       <div class="mt-2 text-end">
-        <strong>Total Amount:</strong> {{order.totalPrice | currency}}
+        <strong>Total Amount:</strong> {{order.totalPrice | currency:'INR':'symbol':'1.2-2'}}
       </div>
     </ng-container>
   </div>
-</div> 
+</div>

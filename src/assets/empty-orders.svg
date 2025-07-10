@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" rx="24" fill="#F5F5F5"/>
+  <g>
+    <rect x="30" y="60" width="60" height="30" rx="6" fill="#E0E0E0"/>
+    <rect x="40" y="40" width="40" height="30" rx="6" fill="#BDBDBD"/>
+    <rect x="50" y="30" width="20" height="10" rx="3" fill="#90CAF9"/>
+    <circle cx="45" cy="80" r="4" fill="#90CAF9"/>
+    <circle cx="75" cy="80" r="4" fill="#90CAF9"/>
+    <rect x="55" y="75" width="10" height="5" rx="2" fill="#BDBDBD"/>
+  </g>
+  <text x="60" y="110" text-anchor="middle" fill="#BDBDBD" font-size="12">No Orders</text>
+</svg> 

@@ -1,35 +1,139 @@
 <div class="container mt-5">
     <div class="card p-4 shadow-lg">
         <h2 class="mb-4">Order History</h2>
+        <form class="row g-3 mb-3 align-items-end">
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Order ID</mat-label>
+                    <input matInput type="text" [(ngModel)]="filterOrderId" name="orderId"
+                        placeholder="Search by Order ID">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Status</mat-label>
+                    <mat-select [(ngModel)]="filterStatus" name="orderStatus">
+                        <mat-option value="">All</mat-option>
+                        <mat-option value="Pending">Pending</mat-option>
+                        <mat-option value="Shipped">Shipped</mat-option>
+                        <mat-option value="Delivered">Delivered</mat-option>
+                        <mat-option value="Cancelled">Cancelled</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="startPicker" [(ngModel)]="filterStartDate" name="startDate"
+                        placeholder="Start Date">
+                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="endPicker" [(ngModel)]="filterEndDate" name="endDate"
+                        placeholder="End Date">
+                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12 text-end">
+                <button mat-stroked-button color="primary" type="button"
+                    (click)="filterOrderId='';filterStatus='';filterStartDate='';filterEndDate='';">Clear
+                    Filters</button>
+            </div>
+        </form>
         <div *ngIf="loading" class="text-center my-4">
-            <mat-spinner></mat-spinner>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <div class="skeleton-table mt-3"></div>
         </div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-        <div *ngIf="!loading && !error && orders.length === 0" class="alert alert-info">
-            You have not placed any orders yet. Once you place an order, it will appear here!
+        <div *ngIf="!loading && !error && filteredOrders.length === 0" class="alert alert-info text-center">
+            <img src="assets/empty-orders.svg" alt="No orders" width="120" class="mb-2">
+            <div>No orders found for the selected filters.</div>
         </div>
-        <table *ngIf="orders.length > 0" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let order of orders">
-                    <td>{{order.orderId}}</td>
-                    <td>{{order.orderDate | date:'medium'}}</td>
-                    <td>{{order.orderStatus}}</td>
-                    <td>{{order.totalPrice | currency}}</td>
-                    <td>
-                        <button mat-raised-button color="primary" (click)="viewOrder(order.orderId)">View
-                            Details</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row mb-2">
+            <div class="col text-end">
+                <button mat-stroked-button color="primary" (click)="exportToCSV()" class="me-2">
+                    <mat-icon>download</mat-icon> Export to CSV
+                </button>
+                <button mat-stroked-button color="accent" (click)="exportToPDF()">
+                    <mat-icon>picture_as_pdf</mat-icon> Export to PDF
+                </button>
+            </div>
+        </div>
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Sort By</mat-label>
+                    <mat-select [(ngModel)]="sortField" name="sortField">
+                        <mat-option value="orderDate">Date</mat-option>
+                        <mat-option value="totalPrice">Total Price</mat-option>
+                        <mat-option value="orderStatus">Status</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Direction</mat-label>
+                    <mat-select [(ngModel)]="sortDirection" name="sortDirection">
+                        <mat-option value="desc">Descending</mat-option>
+                        <mat-option value="asc">Ascending</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 text-end">
+                <mat-form-field appearance="fill" class="w-25">
+                    <mat-label>Page Size</mat-label>
+                    <mat-select [(ngModel)]="pageSize" name="pageSize">
+                        <mat-option [value]="5">5</mat-option>
+                        <mat-option [value]="10">10</mat-option>
+                        <mat-option [value]="20">20</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table *ngIf="sortedAndPagedOrders.length > 0 && !loading"
+                class="table table-bordered table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of sortedAndPagedOrders">
+                        <td>{{order.orderId}}</td>
+                        <td>{{order.orderDate | date:'medium'}}</td>
+                        <td>
+                            <mat-chip [ngClass]="{
+                    'chip-placed': order.orderStatus === 'Order Placed',
+                    'chip-shipped': order.orderStatus === 'Order Shipped',
+                    'chip-delivered': order.orderStatus === 'Order Delivered',
+                    'chip-cancelled': order.orderStatus === 'Order Cancelled'
+                  }">
+                                {{statusLabel(order.orderStatus)}}
+                            </mat-chip>
+                        </td>
+                        <td>{{order.totalPrice | currency:'INR':'symbol':'1.2-2'}}</td>
+                        <td>
+                            <button mat-raised-button color="primary" (click)="viewOrder(order.orderId)">View
+                                Details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-end mt-3" *ngIf="totalFilteredOrders > pageSize">
+            <mat-paginator [length]="totalFilteredOrders" [pageSize]="pageSize" [pageIndex]="page-1"
+                [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
+            </mat-paginator>
+        </div>
     </div>
 </div>

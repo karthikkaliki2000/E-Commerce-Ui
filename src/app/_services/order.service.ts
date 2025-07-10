@@ -7,6 +7,7 @@ export interface ProductSummary {
   productName: string;
   quantity: number;
   unitPrice: number;
+  productImageUrl?: string; // for frontend image binding
 }
 
 export interface OrderResponse {
@@ -28,11 +29,17 @@ export class OrderService {
 
   constructor(private http: HttpClient) {}
 
-  getOrderHistory(): Observable<OrderResponse[]> {
-    return this.http.get<OrderResponse[]>(`${this.API_URL}/history`);
+  // Use /myOrders for user order history
+  getMyOrders(): Observable<OrderResponse[]> {
+    return this.http.get<OrderResponse[]>(`${this.API_URL}/myOrders`);
   }
 
-  getOrderById(orderId: number): Observable<OrderResponse> {
-    return this.http.get<OrderResponse>(`${this.API_URL}/${orderId}`);
+  // Use /getOrderDetails/{orderId} for order details
+  getOrderDetailsById(orderId: number): Observable<OrderResponse> {
+    return this.http.get<OrderResponse>(`${this.API_URL}/getOrderDetails/${orderId}`);
+  }
+
+  cancelOrder(orderId: number) {
+    return this.http.post(`${this.API_URL}/cancelOrder/${orderId}`, null);
   }
 } 

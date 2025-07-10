@@ -42,6 +42,15 @@ import { RegisterComponent } from './register/register.component';
 import { CartComponent } from './cart/cart.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -65,6 +74,7 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
     CartComponent,
     OrderHistoryComponent,
     OrderDetailsComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +95,14 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatStepperModule,
+    MatChipsModule,
+    MatProgressBarModule,
   ],
   providers: [
     UserService,

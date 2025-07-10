@@ -56,9 +56,9 @@ export class ProductService {
     );
   }
 
-  placeOrder(orderDetails: OrderDetails) {
+  placeOrder(orderDetails: OrderDetails, isCartCheckOut: boolean) {
     console.log("Order details---->"+orderDetails);
-    return this.http.post(this.PRODUCT_API_PATH + '/order/place', orderDetails);
+    return this.http.post(this.PRODUCT_API_PATH + '/order/place/' + isCartCheckOut, orderDetails);
   }
 
   public addToCart(productId: number, quantity: number) {

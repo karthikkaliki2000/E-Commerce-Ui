@@ -2,9 +2,27 @@
     <mat-spinner diameter="40"></mat-spinner>
 </div>
 <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-<div class="container mt-5">
+
+<!-- Empty cart message -->
+<div *ngIf="!loading && carts.length === 0" class="alert alert-info text-center my-5">
+    Your cart is empty. <a routerLink="/">Start shopping!</a>
+</div>
+
+<div class="container mt-5" *ngIf="!loading && carts.length > 0">
     <div class="table-responsive">
         <table mat-table [dataSource]="carts" class="mat-elevation-z8">
+
+            <!-- Selection Checkbox Column -->
+            <ng-container matColumnDef="Select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox [checked]="allSelected" [indeterminate]="someSelected"
+                        (change)="toggleSelectAll($event)">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-checkbox [(ngModel)]="element.selected" name="selected{{element.cartId}}"></mat-checkbox>
+                </td>
+            </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="Name">
@@ -57,17 +75,31 @@
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-header-row *matHeaderRowDef="['Select'].concat(displayedColumns)"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['Select'].concat(displayedColumns);"></tr>
 
         </table>
     </div>
     <div class="text-end mt-2">
         <strong>Total: {{ cartTotal }}</strong>
     </div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div>
+            <button mat-stroked-button color="primary" (click)="selectAll()" [disabled]="carts.length === 0">Select
+                All</button>
+            <button mat-stroked-button color="warn" (click)="deselectAll()" [disabled]="selectedCount === 0">Deselect
+                All</button>
+            <button mat-stroked-button color="warn" (click)="removeSelected()" [disabled]="selectedCount === 0">Remove
+                Selected</button>
+        </div>
+        <div *ngIf="selectedCount > 0">
+            <strong>{{ selectedCount }} item(s) selected | Total: {{ selectedTotal | currency }}</strong>
+        </div>
+    </div>
     <div class="d-flex justify-content-between mt-3 gap-2 flex-wrap">
-        <button mat-button color="warn" (click)="clearCart()">Empty Cart</button>
+        <button mat-button color="warn" (click)="clearCart()" [disabled]="carts.length === 0">Empty Cart</button>
         <button mat-button color="primary" (click)="continueShopping()">Continue Shopping</button>
-        <button mat-raised-button color="primary" (click)="checkoutAllProducts()">Checkout All</button>
+        <button mat-raised-button color="primary" (click)="checkoutSelectedProducts()"
+            [disabled]="selectedCount === 0">Checkout Selected</button>
     </div>
 </div>

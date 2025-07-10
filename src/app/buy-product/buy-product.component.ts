@@ -6,6 +6,7 @@ import { Product } from '../_model/product.model';
 import { ProductService } from '../_services/product.service';
 import { Router } from '@angular/router';
 import { CheckoutDataService } from '../_services/checkout-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface OrderProductQuantity {
   productId: number;
@@ -20,21 +21,42 @@ export interface OrderProductQuantity {
 export class BuyProductComponent implements OnInit{
   ngOnInit(): void {
     this.productDetails = this.activatedRoute.snapshot.data['productDetails'];
-    const checkoutItems = this.checkoutDataService.getCheckoutItems();
-    this.productDetails.forEach(product => {
-      const found = checkoutItems.find(item => item.productId === product.productId);
-      this.orderDetails.orderProductQuantities.push({
-        productId: product.productId!,
-        quantity: found ? found.quantity : 1
+    // Support both query and matrix params
+    const isSingle = this.activatedRoute.snapshot.queryParams['isSingleProductCheckout'] || this.activatedRoute.snapshot.params['isSingleProductCheckout'];
+    const productId = this.activatedRoute.snapshot.queryParams['productId'] || this.activatedRoute.snapshot.params['productId'];
+    this.isSingleProductCheckout = isSingle === 'true' || isSingle === true;
+    console.log('productDetails:', this.productDetails);
+    console.log('isSingleProductCheckout:', this.isSingleProductCheckout);
+    console.log('productId:', productId);
+    if (this.isSingleProductCheckout && productId) {
+      // If productDetails is empty, fetch the product by productId
+      if (!this.productDetails || this.productDetails.length === 0) {
+        this.productService.getProductById(+productId).subscribe(product => {
+          this.productDetails = [product];
+          this.orderDetails.orderProductQuantities = [{ productId: +productId, quantity: 1 }];
+          console.log('Fetched product for Buy Now:', product);
+        });
+      } else {
+        this.orderDetails.orderProductQuantities = [{ productId: +productId, quantity: 1 }];
+      }
+    } else {
+      // Existing logic for cart/partial checkout
+      const checkoutItems = this.checkoutDataService.getCheckoutItems();
+      this.productDetails.forEach(product => {
+        const found = checkoutItems.find(item => item.productId === product.productId);
+        this.orderDetails.orderProductQuantities.push({
+          productId: product.productId!,
+          quantity: found ? found.quantity : 1
+        });
       });
-    });
-    console.log(this.orderDetails);
-    console.log(this.productDetails);
+    }
+    console.log('orderDetails:', this.orderDetails);
   }
 
   productDetails: Product[] = [];
+  isSingleProductCheckout: boolean = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private productService: ProductService, private router: Router, private checkoutDataService: CheckoutDataService) { }
+  constructor(private activatedRoute: ActivatedRoute, private productService: ProductService, private router: Router, private checkoutDataService: CheckoutDataService, private snackBar: MatSnackBar) { }
   orderDetails: OrderDetails = {
     fullName: '',
     fullAddress: '',
@@ -46,20 +68,18 @@ export class BuyProductComponent implements OnInit{
 
   placeOrder(form: NgForm): void {
     if (form.valid) {
-      // TODO: Implement order submission logic
-      console.log('Order placed:', this.orderDetails);
-      this.productService.placeOrder(this.orderDetails).subscribe({
+      // Pass true for cart checkout, false for single product checkout
+      this.productService.placeOrder(this.orderDetails, !this.isSingleProductCheckout).subscribe({
         next: (response: any) => {
-          console.log("Order placed successfully---->", response);
+          this.snackBar.open('Order placed successfully!', 'Close', { duration: 2000 });
           this.router.navigate(['/orderConfirmation']);
         },
         error: (err) => {
-          console.error("Order placement failed", err);
-          alert("Order placement failed: " + (err?.error?.message || err.message || 'Unknown error'));
+          this.snackBar.open('Order placement failed: ' + (err?.error?.message || err.message || 'Unknown error'), 'Close', { duration: 3000 });
         }
       });
     } else {
-      console.log('Form is invalid');
+      this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 2000 });
     }
   }
 

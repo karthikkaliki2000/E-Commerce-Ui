@@ -1,1 +1,32 @@
 /* Add custom styles for order details here if needed */
+.chip-placed { background: #e3f2fd; color: #1976d2; }
+.chip-shipped { background: #fff3e0; color: #f57c00; }
+.chip-delivered { background: #e8f5e9; color: #388e3c; }
+.chip-cancelled { background: #ffebee; color: #d32f2f; }
+
+.skeleton-table {
+  height: 180px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.95rem;
+  }
+  .table th, .table td {
+    padding: 0.4rem 0.3rem;
+  }
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
