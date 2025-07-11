@@ -7,6 +7,7 @@ import { ShowProductImagesDialogComponent } from '../show-product-images-dialog/
 import { ImageProcessingService } from '../_services/image-processing.service';
 import { map, tap, debounceTime, Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-show-product-details',
@@ -39,7 +40,20 @@ export class ShowProductDetailsComponent implements OnInit {
     'Delete',
   ];
 
+  mobileColumns: string[] = [
+    'Id',
+    'Name',
+    'Description',
+    'Discounted Price',
+    'Actual Price',
+    'Actions'
+  ];
+
+  isMobile = false;
+  expandedDescription: { [productId: number]: boolean } = {};
+
   ngOnInit(): void {
+    this.checkScreen();
     this.getAllProducts();
     this.searchKeyChanged.pipe(debounceTime(300)).subscribe(() => {
       this.products = [];
@@ -47,6 +61,31 @@ export class ShowProductDetailsComponent implements OnInit {
       this.hasMoreProducts = true;
       this.getAllProducts();
     });
+  }
+
+  @HostListener('window:resize')
+  checkScreen() {
+    this.isMobile = window.innerWidth <= 600;
+    this.displayedColumns = this.isMobile ? [
+      'Id',
+      'Name',
+      'Description',
+      'Price',
+      'Actions'
+    ] : [
+      'Id',
+      'Name',
+      'Description',
+      'Discounted Price',
+      'Actual Price',
+      'Images',
+      'Edit',
+      'Delete',
+    ];
+  }
+
+  toggleDescription(productId: number) {
+    this.expandedDescription[productId] = !this.expandedDescription[productId];
   }
 
   public getAllProducts() {

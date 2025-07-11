@@ -33,28 +33,47 @@
             <!-- Description Column -->
             <ng-container matColumnDef="Description">
                 <th mat-header-cell *matHeaderCellDef> Description </th>
-                <td mat-cell *matCellDef="let element"> {{element.product.productDescription}} </td>
-            </ng-container>
-
-            <!-- Quantity Column -->
-            <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef> Quantity </th>
                 <td mat-cell *matCellDef="let element">
-                    <input #qtyInput type="number" min="1" [value]="element.quantity"
-                        (change)="updateQuantity(element.cartId, +qtyInput.value)" style="width: 60px;" />
+                    <span *ngIf="!isMobile">
+                        {{element.product.productDescription}}
+                    </span>
+                    <span *ngIf="isMobile">
+                        <span *ngIf="expandedDescription[element.cartId]">
+                            {{element.product.productDescription}}
+                            <a href="javascript:void(0)" (click)="toggleDescription(element.cartId)">View less</a>
+                        </span>
+                        <span *ngIf="!expandedDescription[element.cartId]">
+                            {{element.product.productDescription |
+                            slice:0:40}}{{element.product.productDescription.length > 40 ? '...' : ''}}
+                            <a *ngIf="element.product.productDescription.length > 40" href="javascript:void(0)"
+                                (click)="toggleDescription(element.cartId)">View more</a>
+                        </span>
+                    </span>
                 </td>
             </ng-container>
 
-            <!-- Price Column -->
-            <ng-container matColumnDef="Price">
-                <th mat-header-cell *matHeaderCellDef> Unit Price </th>
-                <td mat-cell *matCellDef="let element"> {{element.product.productDiscountedPrice}} </td>
+            <!-- Price Column for Mobile -->
+            <ng-container *ngIf="isMobile" matColumnDef="Price">
+                <th mat-header-cell *matHeaderCellDef> Price </th>
+                <td mat-cell *matCellDef="let element">
+                    <span class="text-success">₹{{element.product.productDiscountedPrice}}</span>
+                    <span class="text-muted"
+                        style="text-decoration: line-through; margin-left: 6px;">₹{{element.product.productActualPrice}}</span>
+                    <span class="ms-2">x{{element.quantity}} = <strong>₹{{element.product.productDiscountedPrice *
+                            element.quantity}}</strong></span>
+                </td>
             </ng-container>
 
-            <!-- Total Price Column (calculated) -->
-            <ng-container matColumnDef="totalPrice">
+            <!-- Price Column for Desktop -->
+            <ng-container *ngIf="!isMobile" matColumnDef="Price">
+                <th mat-header-cell *matHeaderCellDef> Unit Price </th>
+                <td mat-cell *matCellDef="let element"> ₹{{element.product.productDiscountedPrice}} </td>
+            </ng-container>
+
+            <!-- Total Price Column (calculated, desktop only) -->
+            <ng-container *ngIf="!isMobile" matColumnDef="totalPrice">
                 <th mat-header-cell *matHeaderCellDef> Total </th>
-                <td mat-cell *matCellDef="let element"> {{element.product.productDiscountedPrice * element.quantity}}
+                <td mat-cell *matCellDef="let element"> ₹{{element.product.productDiscountedPrice * element.quantity}}
                 </td>
             </ng-container>
 

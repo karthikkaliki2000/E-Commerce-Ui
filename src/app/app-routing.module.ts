@@ -18,6 +18,7 @@ import { RegisterComponent } from './register/register.component';
 import { CartComponent } from './cart/cart.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { AllOrdersComponent } from './all-orders/all-orders.component';
 
 const routes: Routes = [
   {
@@ -99,6 +100,7 @@ const routes: Routes = [
   },
   { path: 'order-history', component: OrderHistoryComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_USER'] } },
   { path: 'order-details/:orderId', component: OrderDetailsComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_USER'] } },
+  { path: 'all-orders', component: AllOrdersComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_ADMIN'] } },
 ];
 
 @NgModule({

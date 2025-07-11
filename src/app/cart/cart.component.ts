@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ProductService } from '../_services/product.service';
 import { Cart } from '../_model/cart.model';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ interface CartWithSelection extends Cart {
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
@@ -41,6 +41,18 @@ export class CartComponent {
     'Remove',
     'Checkout',
   ];
+
+  mobileColumns: string[] = [
+    'Name',
+    'Description',
+    'quantity',
+    'Price',
+    'Remove',
+    'Checkout',
+  ];
+
+  isMobile = false;
+  expandedDescription: { [cartId: number]: boolean } = {};
 
   get cartTotal(): number {
     return this.carts.reduce((sum, item) => sum + ((item.product as Product).productDiscountedPrice ?? 0) * item.quantity, 0);
@@ -225,5 +237,24 @@ export class CartComponent {
 
   ngOnInit(): void {
     this.getCartDetails();
+    this.checkScreen();
+  }
+
+  @HostListener('window:resize')
+  checkScreen() {
+    this.isMobile = window.innerWidth <= 600;
+    this.displayedColumns = this.isMobile ? this.mobileColumns : [
+      'Name',
+      'Description',
+      'quantity',
+      'Price',
+      'totalPrice',
+      'Remove',
+      'Checkout',
+    ];
+  }
+
+  toggleDescription(cartId: number) {
+    this.expandedDescription[cartId] = !this.expandedDescription[cartId];
   }
 }

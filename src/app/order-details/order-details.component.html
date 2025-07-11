@@ -57,11 +57,12 @@
       <table class="table table-sm table-responsive">
         <thead>
           <tr>
-            <th>Image</th>
+            <th></th>
             <th>Product</th>
             <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
+            <th *ngIf="!isMobile">Price</th>
+            <th *ngIf="!isMobile">Total</th>
+            <th *ngIf="isMobile">Price</th>
           </tr>
         </thead>
         <tbody>
@@ -74,8 +75,13 @@
             </td>
             <td>{{item.productName}}</td>
             <td>{{item.quantity}}</td>
-            <td>{{item.unitPrice | currency:'INR':'symbol':'1.2-2'}}</td>
-            <td>{{item.unitPrice * item.quantity | currency:'INR':'symbol':'1.2-2'}}</td>
+            <td *ngIf="!isMobile">{{item.unitPrice | currency:'INR':'symbol':'1.2-2'}}</td>
+            <td *ngIf="!isMobile">{{item.unitPrice * item.quantity | currency:'INR':'symbol':'1.2-2'}}</td>
+            <td *ngIf="isMobile">
+              <span class="text-success">{{item.unitPrice | currency:'INR':'symbol':'1.2-2'}}</span>
+              <span class="ms-2">x{{item.quantity}} = <strong>{{item.unitPrice * item.quantity |
+                  currency:'INR':'symbol':'1.2-2'}}</strong></span>
+            </td>
           </tr>
         </tbody>
       </table>

@@ -43,6 +43,7 @@ import { CartComponent } from './cart/cart.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { AllOrdersComponent } from './all-orders/all-orders.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -51,6 +52,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -75,6 +77,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     OrderHistoryComponent,
     OrderDetailsComponent,
     ConfirmDialogComponent,
+    AllOrdersComponent,
   ],
   imports: [
     BrowserModule,
@@ -103,6 +106,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatStepperModule,
     MatChipsModule,
     MatProgressBarModule,
+    MatTooltipModule,
   ],
   providers: [
     UserService,

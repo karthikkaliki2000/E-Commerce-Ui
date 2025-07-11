@@ -8,14 +8,14 @@
   </button>
 
   <!-- Desktop nav buttons -->
-  <ng-container class="desktop-nav" *ngIf="!showMobileMenu">
+  <div class="desktop-nav" *ngIf="!showMobileMenu">
     <button mat-raised-button color="primary" *ngIf="!isUserLoggedIn()" routerLink="/login">
       Login
     </button>
     <button mat-raised-button color="warn" *ngIf="isUserLoggedIn()" (click)="logout()">
       Logout
     </button>
-  </ng-container>
+  </div>
 </mat-toolbar>
 
 <!-- Mobile nav menu -->
@@ -28,14 +28,16 @@
   </button>
 </div>
 
-<mat-toolbar color="primary" *ngIf="isUserLoggedIn() && !showMobileMenu" class="main-toolbar">
+<mat-toolbar color="primary" *ngIf="isUserLoggedIn() && !showMobileMenu && !isMobileScreen()" class="main-toolbar">
   <button mat-raised-button color="primary" routerLink="/">Home</button>
   <button *ngIf="isUserLoggedIn() && isUser()" mat-raised-button color="primary" routerLink="/cart">Cart</button>
-  <button *ngIf="isUserLoggedIn() && isUser()" mat-raised-button color="primary" routerLink="/order-history">My Orders</button>
+  <button *ngIf="isUserLoggedIn() && isUser()" mat-raised-button color="primary" routerLink="/order-history">My
+    Orders</button>
   <button *ngIf="isAdmin()" mat-raised-button color="primary" [routerLink]="['/addProduct']"
     [queryParams]="{ t: timestamp }" (click)="onAddProductClick()">Add Product</button>
   <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/showProductDetails">View Product
     Details</button>
+  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/all-orders">View All Orders</button>
 </mat-toolbar>
 
 <!-- Mobile nav menu for logged-in user -->
@@ -49,4 +51,6 @@
     [queryParams]="{ t: timestamp }" (click)="onAddProductClick(); toggleMobileMenu()">Add Product</button>
   <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/showProductDetails"
     (click)="toggleMobileMenu()">View Product Details</button>
+  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/all-orders" (click)="toggleMobileMenu()">View
+    All Orders</button>
 </div>

@@ -1,0 +1,123 @@
+<div class="container" [ngClass]="{'menu-open': isMobileMenuOpen()}">
+    <div class="card p-4 shadow-lg">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">All Orders</h2>
+            <button mat-raised-button color="primary" (click)="refreshOrders()" [disabled]="loading">
+                <mat-icon>refresh</mat-icon>
+                Refresh
+            </button>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="text-center my-4">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <p class="mt-3">Loading orders...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="error" class="alert alert-danger d-flex align-items-center">
+            <mat-icon class="me-2">error</mat-icon>
+            {{ error }}
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loading && !error && orders.length === 0" class="text-center my-5">
+            <mat-icon class="display-1 text-muted">inventory_2</mat-icon>
+            <h4 class="text-muted mt-3">No Orders Found</h4>
+            <p class="text-muted">There are no orders to display at the moment.</p>
+        </div>
+
+        <!-- Orders Table -->
+        <div *ngIf="!loading && !error && orders.length > 0" class="table-responsive">
+            <table mat-table [dataSource]="orders" class="mat-table w-100">
+                <!-- Order ID Column -->
+                <ng-container matColumnDef="orderId">
+                    <th mat-header-cell *matHeaderCellDef>Order ID</th>
+                    <td mat-cell *matCellDef="let order">{{ order.orderId }}</td>
+                </ng-container>
+
+                <!-- Customer Column for Mobile -->
+                <ng-container *ngIf="isMobile" matColumnDef="customer">
+                    <th mat-header-cell *matHeaderCellDef>Customer</th>
+                    <td mat-cell *matCellDef="let order">
+                        <div>{{ order.fullName }}</div>
+                        <div class="text-muted" style="font-size: 0.92em;">{{ order.email }}</div>
+                    </td>
+                </ng-container>
+
+                <!-- Customer Name Column for Desktop -->
+                <ng-container *ngIf="!isMobile" matColumnDef="customerName">
+                    <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+                    <td mat-cell *matCellDef="let order">{{ order.fullName }}</td>
+                </ng-container>
+
+                <!-- Email Column for Desktop -->
+                <ng-container *ngIf="!isMobile" matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef>Email</th>
+                    <td mat-cell *matCellDef="let order">{{ order.email }}</td>
+                </ng-container>
+
+                <!-- Order Status Column -->
+                <ng-container matColumnDef="orderStatus">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let order">
+                        <mat-chip [color]="getStatusColor(order.orderStatus)" selected>
+                            {{ getStatusLabel(order.orderStatus) }}
+                        </mat-chip>
+                    </td>
+                </ng-container>
+
+                <!-- Total Price Column -->
+                <ng-container matColumnDef="totalPrice">
+                    <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+                    <td mat-cell *matCellDef="let order">
+                        {{ order.totalPrice | currency:'INR':'symbol':'1.2-2' }}
+                    </td>
+                </ng-container>
+
+                <!-- Order Date Column -->
+                <ng-container matColumnDef="orderDate">
+                    <th mat-header-cell *matHeaderCellDef>Order Date</th>
+                    <td mat-cell *matCellDef="let order">
+                        {{ order.orderDate | date:'short' }}
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let order">
+                        <button mat-icon-button color="primary" (click)="viewOrderDetails(order.orderId)"
+                            matTooltip="View Order Details">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+
+        <!-- Summary -->
+        <div *ngIf="!loading && !error && orders.length > 0" class="mt-4 p-3 bg-light rounded summary">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Total Orders:</strong> {{ orders.length }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Total Revenue:</strong>
+                    {{ totalRevenue | currency:'INR':'symbol':'1.2-2' }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Placed Orders:</strong>
+                    {{ placedOrdersCount }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Delivered Orders:</strong>
+                    {{ deliveredOrdersCount }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

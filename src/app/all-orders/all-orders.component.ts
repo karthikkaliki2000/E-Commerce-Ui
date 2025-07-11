@@ -1,0 +1,101 @@
+import { Component, OnInit, HostListener } from '@angular/core';
+import { OrderService, OrderResponse } from '../_services/order.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+@Component({
+  selector: 'app-all-orders',
+  templateUrl: './all-orders.component.html',
+  styleUrls: ['./all-orders.component.css']
+})
+export class AllOrdersComponent implements OnInit {
+  orders: OrderResponse[] = [];
+  loading = false;
+  error = '';
+  displayedColumns: string[] = ['orderId', 'customerName', 'email', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
+  mobileColumns: string[] = ['orderId', 'customer', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
+  isMobile = false;
+
+  constructor(
+    private orderService: OrderService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) { }
+
+  ngOnInit(): void {
+    this.loadOrders();
+    this.checkScreen();
+  }
+
+  @HostListener('window:resize')
+  checkScreen() {
+    this.isMobile = window.innerWidth <= 600;
+    this.displayedColumns = this.isMobile ? this.mobileColumns : ['orderId', 'customerName', 'email', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
+  }
+
+  loadOrders(): void {
+    this.loading = true;
+    this.error = '';
+    
+    this.orderService.getAllOrders().subscribe({
+      next: (orders) => {
+        this.orders = orders;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading orders:', error);
+        this.error = 'Failed to load orders. Please try again.';
+        this.loading = false;
+      }
+    });
+  }
+
+  viewOrderDetails(orderId: number): void {
+    this.router.navigate(['/order-details', orderId]);
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'Order Placed':
+        return 'primary';
+      case 'Order Shipped':
+        return 'accent';
+      case 'Order Delivered':
+        return 'primary';
+      case 'Order Cancelled':
+        return 'warn';
+      default:
+        return 'primary';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    return status.replace('Order ', '');
+  }
+
+  refreshOrders(): void {
+    this.loadOrders();
+    // Optionally close the menu if open
+    const headerEl = document.querySelector('app-header');
+    if (headerEl && (headerEl as any).componentInstance) {
+      (headerEl as any).componentInstance.showMobileMenu = false;
+    }
+  }
+
+  isMobileMenuOpen(): boolean {
+    // fallback: check if mobile menu is visible in DOM
+    return !!document.querySelector('.mobile-nav-menu');
+  }
+
+  get totalRevenue(): number {
+    return this.orders.reduce((sum, order) => sum + order.totalPrice, 0);
+  }
+
+  get placedOrdersCount(): number {
+    return this.orders.filter(order => order.orderStatus === 'Order Placed').length;
+  }
+
+  get deliveredOrdersCount(): number {
+    return this.orders.filter(order => order.orderStatus === 'Order Delivered').length;
+  }
+} 

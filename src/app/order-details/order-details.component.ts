@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ImageProcessingService } from '../_services/image-processing.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { Product } from '../_model/product.model';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-order-details',
@@ -59,6 +60,8 @@ export class OrderDetailsComponent implements OnInit {
     (event.target as HTMLImageElement).src = 'assets/no-image.png';
   }
 
+  isMobile = false;
+
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
@@ -87,6 +90,12 @@ export class OrderDetailsComponent implements OnInit {
       this.error = 'No order ID provided.';
       this.loading = false;
     }
+    this.checkScreen();
+  }
+
+  @HostListener('window:resize')
+  checkScreen() {
+    this.isMobile = window.innerWidth <= 600;
   }
 
   reorder() {

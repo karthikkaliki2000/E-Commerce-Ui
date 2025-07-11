@@ -21,20 +21,37 @@
 
         <!-- Id Column -->
         <ng-container matColumnDef="Id">
-            <th mat-header-cell *matHeaderCellDef> Id </th>
-            <td mat-cell *matCellDef="let element"> {{element.productId}} </td>
+            <th mat-header-cell *matHeaderCellDef class="id-col"> Id </th>
+            <td mat-cell *matCellDef="let element" class="id-col"> {{element.productId}} </td>
         </ng-container>
 
         <!-- Name Column -->
         <ng-container matColumnDef="Name">
-            <th mat-header-cell *matHeaderCellDef> Name </th>
-            <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+            <th mat-header-cell *matHeaderCellDef class="name-col"> Name </th>
+            <td mat-cell *matCellDef="let element" class="name-col"> {{element.productName}} </td>
         </ng-container>
 
 
+        <!-- Description Column -->
         <ng-container matColumnDef="Description">
             <th mat-header-cell *matHeaderCellDef> Description </th>
-            <td mat-cell *matCellDef="let element"> {{element.productDescription}} </td>
+            <td mat-cell *matCellDef="let element">
+                <span *ngIf="!isMobile">
+                    {{element.productDescription}}
+                </span>
+                <span *ngIf="isMobile">
+                    <span *ngIf="expandedDescription[element.productId]">
+                        {{element.productDescription}}
+                        <a href="javascript:void(0)" (click)="toggleDescription(element.productId)">View less</a>
+                    </span>
+                    <span *ngIf="!expandedDescription[element.productId]">
+                        {{element.productDescription | slice:0:40}}{{element.productDescription.length > 40 ? '...' :
+                        ''}}
+                        <a *ngIf="element.productDescription.length > 40" href="javascript:void(0)"
+                            (click)="toggleDescription(element.productId)">View more</a>
+                    </span>
+                </span>
+            </td>
         </ng-container>
 
 
@@ -82,6 +99,32 @@
                         delete
                     </mat-icon>
                 </button>
+            </td>
+        </ng-container>
+
+        <!-- Actions Column for Mobile -->
+        <ng-container *ngIf="isMobile" matColumnDef="Actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" (click)="showImages(element)">
+                    <mat-icon>preview</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" (click)="editProduct(element)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteProduct(element.productId)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <!-- Price Column for Mobile -->
+        <ng-container *ngIf="isMobile" matColumnDef="Price">
+            <th mat-header-cell *matHeaderCellDef class="price-col"> Price </th>
+            <td mat-cell *matCellDef="let element" class="price-col">
+                <span class="text-success">₹{{element.productDiscountedPrice}}</span>
+                <span class="text-muted"
+                    style="text-decoration: line-through; margin-left: 6px;">₹{{element.productActualPrice}}</span>
             </td>
         </ng-container>
 

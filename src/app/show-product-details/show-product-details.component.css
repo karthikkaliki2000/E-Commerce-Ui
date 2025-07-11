@@ -118,6 +118,31 @@ table {
     color: #1976d2;
 }
 
+/* Custom column widths */
+th.mat-header-cell.id-col,
+td.mat-cell.id-col {
+    min-width: 40px;
+    max-width: 50px;
+    width: 6vw;
+    text-align: center;
+    padding-right: 4px;
+}
+
+th.mat-header-cell.name-col,
+td.mat-cell.name-col {
+    min-width: 80px;
+    width: 16vw;
+    padding-left: 4px;
+}
+
+th.mat-header-cell.price-col,
+td.mat-cell.price-col {
+    min-width: 120px;
+    width: 20vw;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
 @media (max-width: 600px) {
 
     .mat-elevation-z8,
@@ -145,5 +170,29 @@ table {
         word-break: break-word;
         font-size: 0.95rem;
         padding: 6px 4px;
+    }
+
+    th.mat-header-cell.id-col,
+    td.mat-cell.id-col {
+        min-width: 30px;
+        max-width: 40px;
+        width: 10vw;
+        font-size: 0.9rem;
+        padding-right: 2px;
+    }
+
+    th.mat-header-cell.name-col,
+    td.mat-cell.name-col {
+        min-width: 60px;
+        width: 20vw;
+        padding-left: 2px;
+    }
+
+    th.mat-header-cell.price-col,
+    td.mat-cell.price-col {
+        min-width: 100px;
+        width: 40vw;
+        font-size: 1.05rem;
+        white-space: nowrap;
     }
 }

@@ -42,4 +42,9 @@ export class OrderService {
   cancelOrder(orderId: number) {
     return this.http.post(`${this.API_URL}/cancelOrder/${orderId}`, null);
   }
+
+  // Get all orders for admin
+  getAllOrders(): Observable<OrderResponse[]> {
+    return this.http.get<OrderResponse[]>(`${this.API_URL}/allOrders`);
+  }
 } 

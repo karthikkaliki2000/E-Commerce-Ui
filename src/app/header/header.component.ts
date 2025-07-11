@@ -47,4 +47,8 @@ export class HeaderComponent {
   toggleMobileMenu() {
     this.showMobileMenu = !this.showMobileMenu;
   }
+
+  isMobileScreen(): boolean {
+    return window.innerWidth <= 600;
+  }
 }
