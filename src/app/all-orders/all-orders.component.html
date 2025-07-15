@@ -29,11 +29,23 @@
 
         <!-- Orders Table -->
         <div *ngIf="!loading && !error && orders.length > 0" class="table-responsive">
-            <table mat-table [dataSource]="orders" class="mat-table w-100">
+            <table mat-table [dataSource]="pagedOrders" class="mat-table w-100">
                 <!-- Order ID Column -->
                 <ng-container matColumnDef="orderId">
                     <th mat-header-cell *matHeaderCellDef>Order ID</th>
                     <td mat-cell *matCellDef="let order">{{ order.orderId }}</td>
+                </ng-container>
+
+                <!-- Product Names Column -->
+                <ng-container matColumnDef="productNames">
+                    <th mat-header-cell *matHeaderCellDef class="product-names-col">Products</th>
+                    <td mat-cell *matCellDef="let order" class="product-names-col">{{ getProductNames(order) }}</td>
+                </ng-container>
+
+                <!-- Address Column -->
+                <ng-container matColumnDef="address">
+                    <th mat-header-cell *matHeaderCellDef class="address-col">Address</th>
+                    <td mat-cell *matCellDef="let order" class="address-col">{{ order.fullAddress }}</td>
                 </ng-container>
 
                 <!-- Customer Column for Mobile -->
@@ -85,8 +97,8 @@
 
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Actions</th>
-                    <td mat-cell *matCellDef="let order">
+                    <th mat-header-cell *matHeaderCellDef class="actions-col">Actions</th>
+                    <td mat-cell *matCellDef="let order" class="actions-col">
                         <button mat-icon-button color="primary" (click)="viewOrderDetails(order.orderId)"
                             matTooltip="View Order Details">
                             <mat-icon>visibility</mat-icon>
@@ -97,6 +109,11 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
+        </div>
+        <div class="d-flex justify-content-end mt-3" *ngIf="orders.length > pageSize">
+            <mat-paginator [length]="orders.length" [pageSize]="pageSize" [pageIndex]="page-1"
+                [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
+            </mat-paginator>
         </div>
 
         <!-- Summary -->

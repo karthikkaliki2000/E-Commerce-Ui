@@ -38,6 +38,10 @@
   <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/showProductDetails">View Product
     Details</button>
   <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/all-orders">View All Orders</button>
+  <span class="username-greeting ms-auto" *ngIf="isUserLoggedIn() && username"
+    style="margin-left: auto; font-weight: 500; color: #fff; font-size: 1.08em;">
+    Welcome, <b>{{ username }}</b>!
+  </span>
 </mat-toolbar>
 
 <!-- Mobile nav menu for logged-in user -->

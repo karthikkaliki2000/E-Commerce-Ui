@@ -103,6 +103,8 @@
                         <th>Order ID</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Products</th>
+                        <th>Quantities</th>
                         <th>Total</th>
                         <th>Action</th>
                     </tr>
@@ -121,6 +123,8 @@
                                 {{statusLabel(order.orderStatus)}}
                             </mat-chip>
                         </td>
+                        <td>{{ getProductNames(order) }}</td>
+                        <td>{{ getProductQuantities(order) }}</td>
                         <td>{{order.totalPrice | currency:'INR':'symbol':'1.2-2'}}</td>
                         <td>
                             <button mat-raised-button color="primary" (click)="viewOrder(order.orderId)">View

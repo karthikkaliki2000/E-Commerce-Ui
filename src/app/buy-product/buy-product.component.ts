@@ -71,8 +71,20 @@ export class BuyProductComponent implements OnInit{
       // Pass true for cart checkout, false for single product checkout
       this.productService.placeOrder(this.orderDetails, !this.isSingleProductCheckout).subscribe({
         next: (response: any) => {
+          console.log('Order placement response:', response); // Debug log
           this.snackBar.open('Order placed successfully!', 'Close', { duration: 2000 });
-          this.router.navigate(['/orderConfirmation']);
+          // Set confirmation details in the service
+          this.checkoutDataService.setOrderConfirmationDetails({
+            orderDetails: this.orderDetails,
+            productDetails: this.productDetails
+          });
+          // Navigate with orderId in query params if available
+          const orderId = response?.orderId || response?.id || response?.data?.orderId;
+          if (orderId) {
+            this.router.navigate(['/orderConfirmation'], { queryParams: { orderId } });
+          } else {
+            this.router.navigate(['/orderConfirmation']);
+          }
         },
         error: (err) => {
           this.snackBar.open('Order placement failed: ' + (err?.error?.message || err.message || 'Unknown error'), 'Close', { duration: 3000 });

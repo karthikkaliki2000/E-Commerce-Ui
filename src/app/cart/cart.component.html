@@ -70,6 +70,15 @@
                 <td mat-cell *matCellDef="let element"> ₹{{element.product.productDiscountedPrice}} </td>
             </ng-container>
 
+            <!-- Quantity Column -->
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                <td mat-cell *matCellDef="let element">
+                    <input #qtyInput type="number" min="1" [value]="element.quantity"
+                        (change)="updateQuantity(element.cartId, +qtyInput.value)" style="width: 60px;" />
+                </td>
+            </ng-container>
+
             <!-- Total Price Column (calculated, desktop only) -->
             <ng-container *ngIf="!isMobile" matColumnDef="totalPrice">
                 <th mat-header-cell *matHeaderCellDef> Total </th>

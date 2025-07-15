@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { OrderService, OrderResponse } from '../_services/order.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-all-orders',
@@ -12,9 +13,21 @@ export class AllOrdersComponent implements OnInit {
   orders: OrderResponse[] = [];
   loading = false;
   error = '';
-  displayedColumns: string[] = ['orderId', 'customerName', 'email', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
-  mobileColumns: string[] = ['orderId', 'customer', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
+  displayedColumns: string[] = ['orderId', 'productNames', 'customerName', 'email', 'address', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
+  mobileColumns: string[] = ['orderId', 'productNames', 'customer', 'address', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
   isMobile = false;
+  page: number = 1;
+  pageSize: number = 10;
+
+  get pagedOrders(): OrderResponse[] {
+    const start = (this.page - 1) * this.pageSize;
+    return this.orders.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.page = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+  }
 
   constructor(
     private orderService: OrderService,
@@ -30,7 +43,7 @@ export class AllOrdersComponent implements OnInit {
   @HostListener('window:resize')
   checkScreen() {
     this.isMobile = window.innerWidth <= 600;
-    this.displayedColumns = this.isMobile ? this.mobileColumns : ['orderId', 'customerName', 'email', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
+    this.displayedColumns = this.isMobile ? this.mobileColumns : ['orderId', 'productNames', 'customerName', 'email', 'address', 'orderStatus', 'totalPrice', 'orderDate', 'actions'];
   }
 
   loadOrders(): void {
@@ -97,5 +110,10 @@ export class AllOrdersComponent implements OnInit {
 
   get deliveredOrdersCount(): number {
     return this.orders.filter(order => order.orderStatus === 'Order Delivered').length;
+  }
+
+  // Add a helper to get product names as a string
+  getProductNames(order: OrderResponse): string {
+    return order.products?.map(p => p.productName).join(', ') || '';
   }
 } 

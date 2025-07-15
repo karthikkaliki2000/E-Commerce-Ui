@@ -44,4 +44,15 @@ export class UserAuthService {
 
     return roles[0].role_name === 'ROLE_ADMIN'; // check if user has admin
   }
+
+  public getUsername(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub || null;
+    } catch {
+      return null;
+    }
+  }
 }

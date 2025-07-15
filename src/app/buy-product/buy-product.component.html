@@ -5,14 +5,16 @@
                 <form #orderForm="ngForm" (ngSubmit)="placeOrder(orderForm)">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Full Name</mat-label>
-                        <input matInput placeholder="Full Name" [(ngModel)]="orderDetails.fullName" name="fullName" required #fullName="ngModel" />
+                        <input matInput placeholder="Full Name" [(ngModel)]="orderDetails.fullName" name="fullName"
+                            required #fullName="ngModel" />
                         <mat-error *ngIf="fullName.invalid && (fullName.dirty || fullName.touched)">
                             Full name is required
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Email</mat-label>
-                        <input matInput placeholder="Email" [(ngModel)]="orderDetails.email" name="email" required email #email="ngModel" />
+                        <input matInput placeholder="Email" [(ngModel)]="orderDetails.email" name="email" required email
+                            #email="ngModel" />
                         <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
                             <span *ngIf="email.errors?.['required']">Email is required</span>
                             <span *ngIf="email.errors?.['email']">Invalid email format</span>
@@ -20,18 +22,21 @@
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Phone</mat-label>
-                        <input matInput placeholder="Phone" [(ngModel)]="orderDetails.contactNumber" name="contactNumber" required #contactNumber="ngModel" />
+                        <input matInput placeholder="Phone" [(ngModel)]="orderDetails.contactNumber"
+                            name="contactNumber" required #contactNumber="ngModel" />
                         <mat-error *ngIf="contactNumber.invalid && (contactNumber.dirty || contactNumber.touched)">
                             Primary contact number is required
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Alternate Phone</mat-label>
-                        <input matInput placeholder="Alternate Phone" [(ngModel)]="orderDetails.alternativeContactNumber" name="alternativeContactNumber" />
+                        <input matInput placeholder="Alternate Phone"
+                            [(ngModel)]="orderDetails.alternativeContactNumber" name="alternativeContactNumber" />
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Address</mat-label>
-                        <input matInput placeholder="Address" [(ngModel)]="orderDetails.fullAddress" name="fullAddress" required #fullAddress="ngModel" />
+                        <input matInput placeholder="Address" [(ngModel)]="orderDetails.fullAddress" name="fullAddress"
+                            required #fullAddress="ngModel" />
                         <mat-error *ngIf="fullAddress.invalid && (fullAddress.dirty || fullAddress.touched)">
                             Address is required
                         </mat-error>
@@ -42,10 +47,12 @@
                     </div>
 
                     <div class="text-center mt-3" [align]="'center'">
-                        <button mat-raised-button color="primary" class="btn btn-primary" type="submit" [disabled]="orderForm.invalid || hasInvalidQuantities()">
+                        <button mat-raised-button color="primary" class="btn btn-primary" type="submit"
+                            [disabled]="orderForm.invalid || hasInvalidQuantities()">
                             Place Order
                         </button>
-                        <button mat-raised-button color="warn" class="btn btn-warn" type="button" (click)="onReset()">Reset</button>
+                        <button mat-raised-button color="warn" class="btn btn-warn" type="button"
+                            (click)="onReset()">Reset</button>
                     </div>
                 </form>
             </div>
@@ -63,26 +70,28 @@
                         <tbody class="tbody">
                             <tr *ngFor="let item of productDetails">
                                 <td>{{item.productName}}</td>
-                                <td>{{item.productDiscountedPrice}}</td>
+                                <td>{{item.productDiscountedPrice | currency:'INR':'symbol':'1.2-2'}}</td>
                                 <td>
                                     <select #quantitySelect="ngModel" class="form-select"
-                                        [ngModel]="getQuantityForProduct(item.productId || 1)" name="quantity{{item.productId}}"
-                                        required
+                                        [ngModel]="getQuantityForProduct(item.productId || 1)"
+                                        name="quantity{{item.productId}}" required
                                         (change)="onQuantityChange(item.productId || 1, quantitySelect.value)">
                                         <option *ngFor="let q of [1,2,3,4,5]" [value]="q">{{q}}</option>
                                     </select>
-                                    <mat-error *ngIf="quantitySelect.invalid && (quantitySelect.dirty || quantitySelect.touched)">
+                                    <mat-error
+                                        *ngIf="quantitySelect.invalid && (quantitySelect.dirty || quantitySelect.touched)">
                                         Quantity must be at least 1
                                     </mat-error>
                                 </td>
                                 <td>
-                                    {{getTotalAmountForProduct(item.productId || 1, item.productDiscountedPrice)}}
+                                    {{getTotalAmountForProduct(item.productId || 1, item.productDiscountedPrice) |
+                                    currency:'INR':'symbol':'1.2-2'}}
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="3">Total Amount</td>
                                 <td>
-                                    {{getTotalAmountForAllProducts()}}
+                                    {{getTotalAmountForAllProducts() | currency:'INR':'symbol':'1.2-2'}}
                                 </td>
                             </tr>
                         </tbody>

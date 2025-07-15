@@ -50,8 +50,12 @@
           <mat-icon>shopping_cart</mat-icon> Reorder
         </button>
         <button *ngIf="!!canCancelOrder(order.orderStatus)" mat-raised-button color="warn" (click)="cancelOrder()"
-          class="ms-2">
-          <mat-icon>cancel</mat-icon> Cancel Order
+          class="ms-2" [disabled]="cancelling">
+          <mat-icon *ngIf="!cancelling">cancel</mat-icon>
+          <mat-progress-spinner *ngIf="cancelling" diameter="20" mode="indeterminate"
+            style="vertical-align: middle; display: inline-block; margin-right: 4px;"
+            [strokeWidth]="3"></mat-progress-spinner>
+          Cancel Order
         </button>
       </div>
       <table class="table table-sm table-responsive">

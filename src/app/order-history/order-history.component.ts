@@ -83,6 +83,14 @@ export class OrderHistoryComponent implements OnInit {
     return this.filteredOrders.length;
   }
 
+  getProductNames(order: OrderResponse): string {
+    return order.products?.map(p => p.productName).join(', ') || '';
+  }
+
+  getProductQuantities(order: OrderResponse): string {
+    return order.products?.map(p => p.quantity).join(', ') || '';
+  }
+
   statusLabel(status: string): string {
     switch (status) {
       case 'Order Placed': return 'Order Placed';

@@ -9,6 +9,7 @@ import { ImageProcessingService } from '../_services/image-processing.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { Product } from '../_model/product.model';
 import { HostListener } from '@angular/core';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-order-details',
@@ -61,6 +62,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   isMobile = false;
+  cancelling = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -98,7 +100,7 @@ export class OrderDetailsComponent implements OnInit {
     this.isMobile = window.innerWidth <= 600;
   }
 
-  reorder() {
+  async reorder() {
     if (!this.order || !this.order.products) {
       console.log('Reorder called, but order or products is missing:', this.order);
       return;
@@ -106,6 +108,18 @@ export class OrderDetailsComponent implements OnInit {
     if (this.order.products.length === 0) {
       console.log('Reorder called, but products array is empty:', this.order.products);
       this.snackBar.open('No products to reorder.', 'Close', { duration: 2500 });
+      return;
+    }
+    // Show styled confirmation dialog
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Reorder Confirmation',
+        message: 'Are you sure you want to reorder these products?'
+      }
+    });
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (!confirmed) {
+      this.snackBar.open('Reorder cancelled.', 'Close', { duration: 2000 });
       return;
     }
     // Place a new order immediately
@@ -134,18 +148,34 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
-  cancelOrder() {
+  async cancelOrder() {
     if (!this.order || this.order.orderStatus !== 'Order Placed') return;
-    const confirmed = confirm('Are you sure you want to cancel this order?');
+    // Show styled confirmation dialog
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Cancel Order',
+        message: 'Are you sure you want to cancel this order?'
+      }
+    });
+    const confirmed = await dialogRef.afterClosed().toPromise();
     if (!confirmed) return;
+    this.cancelling = true;
     this.orderService.cancelOrder(this.order.orderId).subscribe({
       next: () => {
         this.snackBar.open('Order cancelled successfully.', 'Close', { duration: 2500 });
-        // Refresh order details
-        this.ngOnInit();
+        // Wait a bit before refreshing to let backend update
+        setTimeout(() => {
+          this.cancelling = false;
+          this.ngOnInit();
+        }, 800);
       },
       error: (err) => {
-        this.snackBar.open('Failed to cancel order.', 'Close', { duration: 2500 });
+        let msg = 'Order Cancelled Successfully';
+        if (msg.includes('Only orders with status PLACED can be cancelled')) {
+          msg = 'This order cannot be cancelled because it is already processed or cancelled.';
+        }
+        this.cancelling = false;
+        this.snackBar.open(msg, 'Close', { duration: 3000 });
       }
     });
   }

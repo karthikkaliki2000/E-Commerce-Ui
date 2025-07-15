@@ -36,22 +36,9 @@ export class UserService {
   }
 
   public roleMatch(allowedRoles: any): boolean {
-    // Placeholder implementation, always returns false
-    let isMatch = false;
     const userRoles: any = this.userAuthService.getRoles();
-    if (userRoles != null && userRoles) {
-      for (let i = 0; i < userRoles.length; i++) {
-        for (let j = 0; j < allowedRoles.length; j++) {
-          if (userRoles[i].role_name == allowedRoles[j]) {
-            isMatch = true;
-            break;
-          } else {
-            isMatch = false;
-          }
-        }
-      }
-    }
-    return isMatch;
+    if (!userRoles) return false;
+    return userRoles.some((role: any) => allowedRoles.includes(role.role_name));
   }
 
   public register(registerData: any) {

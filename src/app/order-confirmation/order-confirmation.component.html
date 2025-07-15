@@ -8,9 +8,9 @@
             <p class="lead">Your order has been placed successfully.</p>
         </div>
         <div *ngIf="orderId" class="mb-3">
-          <a [routerLink]="['/order-details', orderId]" class="btn btn-success">
-            <mat-icon>receipt_long</mat-icon> View Order Details
-          </a>
+            <a [routerLink]="['/order-details', orderId]" class="btn btn-success">
+                <mat-icon>receipt_long</mat-icon> View Order Details
+            </a>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -26,27 +26,40 @@
                                     Contact:</strong> {{orderDetails.alternativeContactNumber}}</div>
                             <hr>
                             <h6>Products Ordered:</h6>
-                            <table class="table table-sm">
+                            <table class="table table-sm order-table-responsive">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Total</th>
+                                        <th *ngIf="!isMobile">Quantity</th>
+                                        <th *ngIf="!isMobile">Price</th>
+                                        <th *ngIf="!isMobile">Total</th>
+                                        <th *ngIf="isMobile">Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let item of orderDetails.orderProductQuantities">
-                                        <td>{{getProductName(item.productId)}}</td>
-                                        <td>{{item.quantity}}</td>
-                                        <td>{{getProductPrice(item.productId) | currency}}</td>
-                                        <td>{{getProductPrice(item.productId) * item.quantity | currency}}</td>
+                                        <td>
+                                            <div>{{getProductName(item.productId)}}</div>
+                                            <div *ngIf="isMobile" class="text-muted small">Qty: {{item.quantity}}</div>
+                                        </td>
+                                        <td *ngIf="!isMobile">{{item.quantity}}</td>
+                                        <td *ngIf="!isMobile">{{getProductPrice(item.productId) |
+                                            currency:'INR':'symbol':'1.2-2'}}</td>
+                                        <td *ngIf="!isMobile">{{getProductPrice(item.productId) * item.quantity |
+                                            currency:'INR':'symbol':'1.2-2'}}</td>
+                                        <td *ngIf="isMobile">
+                                            <span class="text-success">{{getProductPrice(item.productId) |
+                                                currency:'INR':'symbol':'1.2-2'}}</span>
+                                            <span class="ms-2">x{{item.quantity}} =
+                                                <strong>{{getProductPrice(item.productId) * item.quantity |
+                                                    currency:'INR':'symbol':'1.2-2'}}</strong></span>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div class="mt-2 text-end">
                                 <strong>Total Amount:</strong>
-                                {{getTotalAmount() | currency}}
+                                {{getTotalAmount() | currency:'INR':'symbol':'1.2-2'}}
                             </div>
                         </ng-container>
                         <ng-template #noOrder>

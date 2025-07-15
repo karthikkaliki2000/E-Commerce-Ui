@@ -21,13 +21,21 @@ export class CheckoutDataService {
 
   setOrderConfirmationDetails(details: any) {
     this.orderConfirmationDetails = details;
+    localStorage.setItem('orderConfirmationDetails', JSON.stringify(details));
   }
 
   getOrderConfirmationDetails(): any {
+    if (!this.orderConfirmationDetails) {
+      const stored = localStorage.getItem('orderConfirmationDetails');
+      if (stored) {
+        this.orderConfirmationDetails = JSON.parse(stored);
+      }
+    }
     return this.orderConfirmationDetails;
   }
 
   clearOrderConfirmationDetails() {
     this.orderConfirmationDetails = null;
+    localStorage.removeItem('orderConfirmationDetails');
   }
 } 

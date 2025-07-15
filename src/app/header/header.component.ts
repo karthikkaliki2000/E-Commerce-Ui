@@ -51,4 +51,8 @@ export class HeaderComponent {
   isMobileScreen(): boolean {
     return window.innerWidth <= 600;
   }
+
+  get username(): string | null {
+    return this.userAuthService.getUsername();
+  }
 }

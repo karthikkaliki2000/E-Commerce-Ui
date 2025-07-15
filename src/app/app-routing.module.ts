@@ -99,7 +99,7 @@ const routes: Routes = [
     data: { roles: ['ROLE_USER'] },
   },
   { path: 'order-history', component: OrderHistoryComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_USER'] } },
-  { path: 'order-details/:orderId', component: OrderDetailsComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_USER'] } },
+  { path: 'order-details/:orderId', component: OrderDetailsComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_USER', 'ROLE_ADMIN'] } },
   { path: 'all-orders', component: AllOrdersComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_ADMIN'] } },
 ];
 
