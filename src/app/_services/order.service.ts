@@ -47,4 +47,14 @@ export class OrderService {
   getAllOrders(): Observable<OrderResponse[]> {
     return this.http.get<OrderResponse[]>(`${this.API_URL}/allOrders`);
   }
+
+  // Mark order as delivered (admin)
+  markOrderAsDelivered(orderId: number): Observable<any> {
+    return this.http.get(`${this.API_URL}/markOrderAsDelivered/${orderId}`);
+  }
+
+  // Mark order as shipped (admin)
+  markOrderAsShipped(orderId: number): Observable<any> {
+    return this.http.get(`${this.API_URL}/markOrderAsShipped/${orderId}`);
+  }
 } 

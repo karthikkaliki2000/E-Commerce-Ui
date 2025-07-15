@@ -3,6 +3,8 @@ import { OrderService, OrderResponse } from '../_services/order.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-all-orders',
@@ -32,7 +34,8 @@ export class AllOrdersComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -115,5 +118,67 @@ export class AllOrdersComponent implements OnInit {
   // Add a helper to get product names as a string
   getProductNames(order: OrderResponse): string {
     return order.products?.map(p => p.productName).join(', ') || '';
+  }
+
+  // Mark order as delivered
+  markAsDelivered(order: OrderResponse): void {
+    if (order.orderStatus !== 'Order Shipped') {
+      this.snackBar.open('Only orders with status Shipped can be marked as DELIVERED', 'Close', { duration: 3000 });
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: {
+        title: 'Mark as Delivered',
+        message: `Are you sure you want to mark Order #${order.orderId} as delivered?`
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.orderService.markOrderAsDelivered(order.orderId).subscribe({
+          next: () => {
+            this.snackBar.open('Order marked as delivered successfully', 'Close', { duration: 3000 });
+            order.orderStatus = 'Order Delivered';
+            // Optionally, refresh the list
+            // this.loadOrders();
+          },
+          error: (error) => {
+            // this.snackBar.open('Failed to mark order as delivered', 'Close', { duration: 3000 });
+            console.error('Error marking as delivered:', error);
+          }
+        });
+      }
+    });
+  }
+
+  // Mark order as shipped
+  markAsShipped(order: OrderResponse): void {
+    if (order.orderStatus !== 'Order Placed') {
+      this.snackBar.open('Only orders with status PLACED can be marked as SHIPPED', 'Close', { duration: 3000 });
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: {
+        title: 'Mark as Shipped',
+        message: `Are you sure you want to mark Order #${order.orderId} as shipped?`
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.orderService.markOrderAsShipped(order.orderId).subscribe({
+          next: (res) => {
+            this.snackBar.open('Order marked as shipped successfully', 'Close', { duration: 3000 });
+            order.orderStatus = 'Order Shipped';
+            // Optionally, refresh the list
+            // this.loadOrders();
+          },
+          error: (error) => {
+            this.snackBar.open('Failed to mark order as shipped', 'Close', { duration: 3000 });
+            console.error('Error marking as shipped:', error);
+          }
+        });
+      }
+    });
   }
 } 

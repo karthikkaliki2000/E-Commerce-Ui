@@ -1,8 +1,45 @@
 /* Add custom styles for order details here if needed */
-.chip-placed { background: #e3f2fd; color: #1976d2; }
-.chip-shipped { background: #fff3e0; color: #f57c00; }
-.chip-delivered { background: #e8f5e9; color: #388e3c; }
-.chip-cancelled { background: #ffebee; color: #d32f2f; }
+.chip-placed {
+  background-color: #fff3e0 !important;
+  /* light orange background */
+  color: #f57c00 !important;
+  /* orange text */
+  font-weight: bold;
+}
+
+.chip-shipped {
+  background-color: #e8f5e9 !important;
+  /* light green background */
+  color: #388e3c !important;
+  /* green text */
+  font-weight: bold;
+}
+
+.chip-delivered {
+  background-color: #e8f5e9 !important;
+  /* light green background */
+  color: #1b5e20 !important;
+  /* darker green text */
+  font-weight: bold;
+}
+
+.chip-cancelled {
+  background-color: #ffebee !important;
+  /* light red background */
+  color: #d32f2f !important;
+  /* red text */
+  font-weight: bold;
+}
+
+mat-chip {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  transition: box-shadow 0.2s;
+}
+
+mat-chip:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
 
 .skeleton-table {
   height: 180px;
@@ -13,17 +50,55 @@
 }
 
 @keyframes skeleton-loading {
-  0% { background-position: 100% 50%; }
-  100% { background-position: 0 50%; }
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.step-completed {
+  color: #388e3c !important;
+  /* Green */
+  font-weight: bold;
+}
+
+.step-cancelled {
+  color: #d32f2f !important;
+  /* Red */
+  font-weight: bold;
+}
+
+.step-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+  font-size: 20px;
+}
+
+.step-completed.step-icon {
+  color: #388e3c !important;
+}
+
+.step-cancelled.step-icon {
+  color: #d32f2f !important;
+}
+
+.step-pending.step-icon {
+  color: #bdbdbd !important;
 }
 
 @media (max-width: 768px) {
   .table {
     font-size: 0.95rem;
   }
-  .table th, .table td {
+
+  .table th,
+  .table td {
     padding: 0.4rem 0.3rem;
   }
+
   .table-responsive {
     display: block;
     width: 100%;

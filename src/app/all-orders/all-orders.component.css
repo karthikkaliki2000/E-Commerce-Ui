@@ -98,10 +98,17 @@ td.mat-cell.address-col {
 th.mat-header-cell.actions-col,
 td.mat-cell.actions-col {
     min-width: 60px;
-    max-width: 80px;
-    width: 8vw;
+    max-width: 120px;
+    width: 12vw;
     white-space: nowrap;
     text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (max-width: 768px) {

@@ -10,6 +10,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { Product } from '../_model/product.model';
 import { HostListener } from '@angular/core';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { UserAuthService } from '../_services/user-auth.service';
 
 @Component({
   selector: 'app-order-details',
@@ -38,6 +39,10 @@ export class OrderDetailsComponent implements OnInit {
       case 'Order Cancelled': return 'Order Cancelled';
       default: return status;
     }
+  }
+
+  normalizeStatus(status: string): string {
+    return status ? status.trim().toLowerCase() : '';
   }
 
   // Mask sensitive info for privacy
@@ -71,27 +76,30 @@ export class OrderDetailsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
-    private imageProcessingService: ImageProcessingService
+    private imageProcessingService: ImageProcessingService,
+    private userAuthService: UserAuthService
   ) {}
 
   ngOnInit(): void {
-    const orderId = this.route.snapshot.paramMap.get('orderId');
-    if (orderId) {
-      this.orderService.getOrderDetailsById(+orderId).subscribe({
-        next: (data) => {
-          // Handle both array and object responses
-          this.order = Array.isArray(data) ? data[0] : data;
-          this.loading = false;
-        },
-        error: (err) => {
-          this.error = 'Failed to load order details.';
-          this.loading = false;
-        }
-      });
-    } else {
-      this.error = 'No order ID provided.';
-      this.loading = false;
-    }
+    this.route.paramMap.subscribe(params => {
+      const orderId = params.get('orderId');
+      if (orderId) {
+        this.loading = true;
+        this.orderService.getOrderDetailsById(+orderId).subscribe({
+          next: (data) => {
+            this.order = Array.isArray(data) ? data[0] : data;
+            this.loading = false;
+          },
+          error: (err) => {
+            this.error = 'Failed to load order details.';
+            this.loading = false;
+          }
+        });
+      } else {
+        this.error = 'No order ID provided.';
+        this.loading = false;
+      }
+    });
     this.checkScreen();
   }
 
@@ -178,6 +186,10 @@ export class OrderDetailsComponent implements OnInit {
         this.snackBar.open(msg, 'Close', { duration: 3000 });
       }
     });
+  }
+
+  get isUser(): boolean {
+    return this.userAuthService.isUser();
   }
 
   // getProductImageUrl(product: any): SafeUrl | string {

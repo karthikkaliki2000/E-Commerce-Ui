@@ -42,13 +42,25 @@ export class BuyProductComponent implements OnInit{
     } else {
       // Existing logic for cart/partial checkout
       const checkoutItems = this.checkoutDataService.getCheckoutItems();
-      this.productDetails.forEach(product => {
-        const found = checkoutItems.find(item => item.productId === product.productId);
-        this.orderDetails.orderProductQuantities.push({
-          productId: product.productId!,
-          quantity: found ? found.quantity : 1
+      if (checkoutItems && checkoutItems.length > 0) {
+        // Filter productDetails to only include selected products
+        this.productDetails = this.productDetails.filter(product =>
+          checkoutItems.some(item => item.productId === product.productId)
+        );
+        // Set quantities for orderDetails
+        this.orderDetails.orderProductQuantities = checkoutItems.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity
+        }));
+      } else {
+        // Fallback: show all products (should not happen in normal flow)
+        this.productDetails.forEach(product => {
+          this.orderDetails.orderProductQuantities.push({
+            productId: product.productId!,
+            quantity: 1
+          });
         });
-      });
+      }
     }
     console.log('orderDetails:', this.orderDetails);
   }

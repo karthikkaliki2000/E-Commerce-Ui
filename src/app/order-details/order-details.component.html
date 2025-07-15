@@ -25,10 +25,10 @@
       <div class="mb-2">
         <strong>Status:</strong>
         <mat-chip [ngClass]="{
-          'chip-placed': order.orderStatus === 'Order Placed',
-          'chip-shipped': order.orderStatus === 'Order Shipped',
-          'chip-delivered': order.orderStatus === 'Order Delivered',
-          'chip-cancelled': order.orderStatus === 'Order Cancelled'
+          'chip-placed': normalizeStatus(order.orderStatus) === 'order placed',
+          'chip-shipped': normalizeStatus(order.orderStatus) === 'order shipped',
+          'chip-delivered': normalizeStatus(order.orderStatus) === 'order delivered',
+          'chip-cancelled': normalizeStatus(order.orderStatus) === 'order cancelled'
         }">
           {{statusLabel(order.orderStatus)}}
         </mat-chip>
@@ -38,15 +38,29 @@
       <div class="mb-4">
         <mat-horizontal-stepper [selectedIndex]="getStatusStepIndex(order.orderStatus)" linear>
           <mat-step *ngFor="let step of orderStatusSteps; let i = index"
-            [completed]="i < getStatusStepIndex(order.orderStatus)">
-            <ng-template matStepLabel>{{ step | titlecase }}</ng-template>
+            [completed]="i <= getStatusStepIndex(order.orderStatus) && order.orderStatus !== 'Order Cancelled'"
+            [editable]="false">
+            <ng-template matStepLabel>
+              <span [ngClass]="{
+                'step-completed': order.orderStatus !== 'Order Cancelled' && i <= getStatusStepIndex(order.orderStatus),
+                'step-cancelled': order.orderStatus === 'Order Cancelled' && i === getStatusStepIndex(order.orderStatus)
+              }">
+                <mat-icon *ngIf="order.orderStatus !== 'Order Cancelled' && i <= getStatusStepIndex(order.orderStatus)"
+                  class="step-icon step-completed">check_circle</mat-icon>
+                <mat-icon *ngIf="order.orderStatus === 'Order Cancelled' && i === getStatusStepIndex(order.orderStatus)"
+                  class="step-icon step-cancelled">cancel</mat-icon>
+                <mat-icon *ngIf="i > getStatusStepIndex(order.orderStatus)"
+                  class="step-icon step-pending">radio_button_unchecked</mat-icon>
+                {{ step | titlecase }}
+              </span>
+            </ng-template>
           </mat-step>
         </mat-horizontal-stepper>
       </div>
       <hr>
       <h6>Products Ordered:</h6>
       <div class="mb-3 text-end">
-        <button mat-raised-button color="primary" (click)="reorder()">
+        <button *ngIf="isUser" mat-raised-button color="primary" (click)="reorder()">
           <mat-icon>shopping_cart</mat-icon> Reorder
         </button>
         <button *ngIf="!!canCancelOrder(order.orderStatus)" mat-raised-button color="warn" (click)="cancelOrder()"
