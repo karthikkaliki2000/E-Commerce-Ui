@@ -1,8 +1,23 @@
 /* Add custom styles for order history here if needed */
-.chip-placed { background: #e3f2fd; color: #1976d2; }
-.chip-shipped { background: #fff3e0; color: #f57c00; }
-.chip-delivered { background: #e8f5e9; color: #388e3c; }
-.chip-cancelled { background: #ffebee; color: #d32f2f; }
+.chip-placed {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.chip-shipped {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.chip-delivered {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.chip-cancelled {
+  background: #ffebee;
+  color: #d32f2f;
+}
 
 .skeleton-table {
   height: 180px;
@@ -13,15 +28,31 @@
 }
 
 @keyframes skeleton-loading {
-  0% { background-position: 100% 50%; }
-  100% { background-position: 0 50%; }
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.empty-orders-icon {
+  font-size: 3.2rem;
+  color: #bdbdbd;
+  margin-bottom: 1rem;
+  margin-right: 2rem;
+  display: inline-block;
+  overflow: visible;
 }
 
 @media (max-width: 768px) {
   .table {
     font-size: 0.95rem;
   }
-  .table th, .table td {
+
+  .table th,
+  .table td {
     padding: 0.4rem 0.3rem;
   }
-} 
+}

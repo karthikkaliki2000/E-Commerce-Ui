@@ -30,8 +30,12 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   // Use /myOrders for user order history
-  getMyOrders(): Observable<OrderResponse[]> {
-    return this.http.get<OrderResponse[]>(`${this.API_URL}/myOrders`);
+  getMyOrders(status?: string): Observable<OrderResponse[]> {
+    let url = `${this.API_URL}/myOrders`;
+    if (status) {
+      url += `?status=${encodeURIComponent(status)}`;
+    }
+    return this.http.get<OrderResponse[]>(url);
   }
 
   // Use /getOrderDetails/{orderId} for order details
@@ -44,8 +48,12 @@ export class OrderService {
   }
 
   // Get all orders for admin
-  getAllOrders(): Observable<OrderResponse[]> {
-    return this.http.get<OrderResponse[]>(`${this.API_URL}/allOrders`);
+  getAllOrders(status?: string): Observable<OrderResponse[]> {
+    let url = `${this.API_URL}/allOrders`;
+    if (status) {
+      url += `?status=${encodeURIComponent(status)}`;
+    }
+    return this.http.get<OrderResponse[]>(url);
   }
 
   // Mark order as delivered (admin)

@@ -111,6 +111,15 @@ td.mat-cell.actions-col {
     align-items: center;
 }
 
+.empty-orders-icon {
+    font-size: 3.2rem;
+    color: #bdbdbd;
+    margin-bottom: 1rem;
+    margin-right: 2rem;
+    display: inline-block;
+    overflow: visible;
+}
+
 @media (max-width: 768px) {
     .d-flex {
         flex-direction: column;

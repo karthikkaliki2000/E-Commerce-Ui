@@ -20,6 +20,7 @@ export class AllOrdersComponent implements OnInit {
   isMobile = false;
   page: number = 1;
   pageSize: number = 10;
+  selectedStatus: string = '';
 
   get pagedOrders(): OrderResponse[] {
     const start = (this.page - 1) * this.pageSize;
@@ -29,6 +30,10 @@ export class AllOrdersComponent implements OnInit {
   onPageChange(event: PageEvent) {
     this.page = event.pageIndex + 1;
     this.pageSize = event.pageSize;
+  }
+
+  onStatusChange() {
+    this.loadOrders();
   }
 
   constructor(
@@ -53,14 +58,14 @@ export class AllOrdersComponent implements OnInit {
     this.loading = true;
     this.error = '';
     
-    this.orderService.getAllOrders().subscribe({
+    this.orderService.getAllOrders(this.selectedStatus).subscribe({
       next: (orders) => {
-        this.orders = orders;
+        this.orders = orders || [];
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading orders:', error);
         this.error = 'Failed to load orders. Please try again.';
+        this.orders = [];
         this.loading = false;
       }
     });

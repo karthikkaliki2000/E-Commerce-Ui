@@ -1,12 +1,43 @@
 <div class="container mt-5">
     <div class="card text-center" style="padding: 20px; color: rgb(66, 0, 128);">
         <h1>
-        You are User 
-    </h1>
+            You are User
+        </h1>
 
-    <h1>
-        {{message}}
-    </h1>
+        <h1>
+            {{message}}
+        </h1>
+    </div>
+
+
+
+
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <mat-icon class="display-1 text-primary icon">shopping_cart</mat-icon>
+                    <h4 class="mt-3">Open Cart</h4>
+                    <p class="text-muted">View my saved products in cart</p>
+                    <button mat-raised-button color="primary" routerLink="/cart">
+                        View Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <mat-icon class="display-1 text-success icon">inventory_2</mat-icon>
+                    <h4 class="mt-3">My Orders</h4>
+                    <p class="text-muted">Manage and view my orders</p>
+                    <button mat-raised-button color="accent" routerLink="/order-history">
+                        View Orders
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-

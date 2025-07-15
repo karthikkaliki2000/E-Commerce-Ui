@@ -18,6 +18,7 @@ export class OrderHistoryComponent implements OnInit {
   filterStatus: string = '';
   filterStartDate: string = '';
   filterEndDate: string = '';
+  selectedStatus: string = '';
 
   // Sorting state
   sortField: string = 'orderDate';
@@ -104,16 +105,28 @@ export class OrderHistoryComponent implements OnInit {
   constructor(private orderService: OrderService, private router: Router) {}
 
   ngOnInit(): void {
-    this.orderService.getMyOrders().subscribe({
+    this.loadOrders();
+  }
+
+  loadOrders(): void {
+    this.loading = true;
+    this.error = null;
+    this.orderService.getMyOrders(this.selectedStatus).subscribe({
       next: (data) => {
         this.orders = data || [];
         this.loading = false;
       },
       error: (err) => {
         this.error = 'Failed to load order history.';
+        this.orders = [];
         this.loading = false;
       }
     });
+  }
+
+  onStatusChange() {
+    this.page = 1;
+    this.loadOrders();
   }
 
   viewOrder(orderId: number) {
