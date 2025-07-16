@@ -41,6 +41,7 @@ export class OrderConfirmationComponent implements OnInit {
           contactNumber: order.contactNumber,
           alternativeContactNumber: order.alternativeContactNumber,
           email: order.email,
+          transactionId: '', // Add this line to fix the error
           orderProductQuantities: order.products.map(p => ({ productId: p.productId, quantity: p.quantity }))
         };
         this.productDetails = order.products.map(p => ({

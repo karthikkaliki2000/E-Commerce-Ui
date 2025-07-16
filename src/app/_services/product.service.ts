@@ -91,4 +91,8 @@ export class ProductService {
   clearCart() {
     return this.http.delete(this.PRODUCT_API_PATH + '/cart/clear');
   }
+
+  public createTransaction(amount:any){
+    return this.http.get(this.PRODUCT_API_PATH+"/order/create/transaction/"+amount);
+  }
 }

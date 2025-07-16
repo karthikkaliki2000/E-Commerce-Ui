@@ -7,10 +7,28 @@ import { ProductService } from '../_services/product.service';
 import { Router } from '@angular/router';
 import { CheckoutDataService } from '../_services/checkout-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+// import * as Razorpay from 'razorpay'; // Remove this line
+
+declare var Razorpay: any; // Add this line for Razorpay global
 
 export interface OrderProductQuantity {
   productId: number;
   quantity: number;
+}
+
+// Add type for Razorpay handler response
+interface RazorpayPaymentResponse {
+  razorpay_payment_id?: string;
+  [key: string]: any;
+}
+
+// Add type for backend transaction response (customize as needed)
+interface TransactionResponse {
+  key: string;
+  amount: number;
+  currency: string;
+  orderId: string;
+  [key: string]: any;
 }
 
 @Component({
@@ -67,6 +85,7 @@ export class BuyProductComponent implements OnInit{
 
   productDetails: Product[] = [];
   isSingleProductCheckout: boolean = false;
+  isProcessing: boolean = false; // To disable order button during processing
 
   constructor(private activatedRoute: ActivatedRoute, private productService: ProductService, private router: Router, private checkoutDataService: CheckoutDataService, private snackBar: MatSnackBar) { }
   orderDetails: OrderDetails = {
@@ -75,14 +94,34 @@ export class BuyProductComponent implements OnInit{
     contactNumber: '',
     alternativeContactNumber: '',
     email: '',
+    transactionId: '',
     orderProductQuantities: []
   };
 
+  // Add validation for orderDetails before payment
+  isOrderDetailsValid(): boolean {
+    const od = this.orderDetails;
+    return !!(
+      od.fullName &&
+      od.fullAddress &&
+      od.contactNumber &&
+      od.email &&
+      od.orderProductQuantities.length > 0 &&
+      !this.hasInvalidQuantities()
+    );
+  }
+
   placeOrder(form: NgForm): void {
+    if (!this.isOrderDetailsValid()) {
+      this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 2000 });
+      return;
+    }
     if (form.valid) {
+      this.isProcessing = true;
       // Pass true for cart checkout, false for single product checkout
       this.productService.placeOrder(this.orderDetails, !this.isSingleProductCheckout).subscribe({
         next: (response: any) => {
+          this.isProcessing = false;
           console.log('Order placement response:', response); // Debug log
           this.snackBar.open('Order placed successfully!', 'Close', { duration: 2000 });
           // Set confirmation details in the service
@@ -99,6 +138,7 @@ export class BuyProductComponent implements OnInit{
           }
         },
         error: (err) => {
+          this.isProcessing = false;
           this.snackBar.open('Order placement failed: ' + (err?.error?.message || err.message || 'Unknown error'), 'Close', { duration: 3000 });
         }
       });
@@ -114,6 +154,7 @@ export class BuyProductComponent implements OnInit{
       contactNumber: '',
       alternativeContactNumber: '',
       email: '',
+      transactionId: '',
       orderProductQuantities: []
     };
   }
@@ -149,6 +190,69 @@ export class BuyProductComponent implements OnInit{
     
     hasInvalidQuantities(): boolean {
       return this.orderDetails.orderProductQuantities.some(q => !q.quantity || q.quantity <= 0);
+    }
+
+
+    createTransactionAndPlaceOrder(orderForm: NgForm) {
+      if (!this.isOrderDetailsValid()) {
+        this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 2000 });
+        return;
+      }
+      this.isProcessing = true;
+      this.productService.createTransaction(this.getTotalAmountForAllProducts()).subscribe(
+        (response: any) => {
+          console.log(response);
+          this.openTransactionModal(response, orderForm);
+        },
+        (error: any) => {
+          this.isProcessing = false;
+          console.log(error);
+          this.snackBar.open('Transaction creation failed: ' + (error?.error?.message || error.message || 'Unknown error'), 'Close', { duration: 3000 });
+        }
+      );
+    }
+
+
+    openTransactionModal(response: TransactionResponse, orderForm: NgForm) {
+      const options = {
+        key: response.key,
+        amount: response.amount,
+        currency: response.currency,
+        order_id: response.orderId,
+        handler: (rzpResponse: RazorpayPaymentResponse) => {
+          if (rzpResponse && rzpResponse.razorpay_payment_id) {
+            this.processResponse(rzpResponse, orderForm);
+          } else {
+            this.isProcessing = false;
+            this.snackBar.open('Payment failed or cancelled.', 'Close', { duration: 3000 });
+          }
+        },
+        prefill: {
+          name: this.orderDetails.fullName,
+          email: this.orderDetails.email,
+          contact: this.orderDetails.contactNumber
+        },
+        notes: {
+          address: this.orderDetails.fullAddress
+        },
+        theme: {
+          color: '#F37254'
+        }
+      };
+      try {
+        const razorPayObject = new Razorpay(options);
+        razorPayObject.open();
+      } catch (e) {
+        this.isProcessing = false;
+        this.snackBar.open('Failed to open payment modal.', 'Close', { duration: 3000 });
+        console.error('Razorpay error:', e);
+      }
+    }
+
+    processResponse(resp: RazorpayPaymentResponse, orderForm: NgForm) {
+      console.log(resp);
+      this.orderDetails.transactionId = resp.razorpay_payment_id || '';
+      this.placeOrder(orderForm);
     }
   }
 

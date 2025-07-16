@@ -6,5 +6,6 @@ export interface OrderDetails {
   contactNumber: string;
   alternativeContactNumber: string;
   email: string;
+  transactionId:string;
   orderProductQuantities: OrderProductQuantity[];
 } 

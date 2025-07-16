@@ -141,6 +141,7 @@ export class OrderDetailsComponent implements OnInit {
       contactNumber: this.order.contactNumber,
       alternativeContactNumber: this.order.alternativeContactNumber,
       email: this.order.email,
+      transactionId: '', // Add this line to fix the error
       orderProductQuantities
     };
     this.productService.placeOrder(orderDetails, false).subscribe({
