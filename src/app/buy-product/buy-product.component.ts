@@ -79,6 +79,7 @@ export class BuyProductComponent implements OnInit{
           });
         });
       }
+
     }
     console.log('orderDetails:', this.orderDetails);
   }
@@ -254,5 +255,8 @@ export class BuyProductComponent implements OnInit{
       this.orderDetails.transactionId = resp.razorpay_payment_id || '';
       this.placeOrder(orderForm);
     }
+
+
+
   }
 
