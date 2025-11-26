@@ -2,8 +2,14 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card product-image-card p-3 mb-4">
+                <button type="button" class="pd-image-nav left" [disabled]="!canPrev()" (click)="prevImage()">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
                 <img [src]="product?.productImages?.[selectedProductIndex]?.url" alt="product image"
                     class="img-fluid main-image">
+                <button type="button" class="pd-image-nav right" [disabled]="!canNext()" (click)="nextImage()">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
             </div>
             <div class="product-images-grid mt-4 d-flex justify-content-center">
                 <img *ngFor="let image of product?.productImages; let index = index" [src]="image?.url"

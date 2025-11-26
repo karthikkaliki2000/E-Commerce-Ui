@@ -19,6 +19,8 @@ import { CartComponent } from './cart/cart.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { AllOrdersComponent } from './all-orders/all-orders.component';
+import { SchedulerComponent } from './scheduler/scheduler.component';
+import { CustomerAddressComponent } from './customer-address/customer-address.component';
 
 const routes: Routes = [
   {
@@ -35,7 +37,7 @@ const routes: Routes = [
   },
   {
     path: 'user',
-    component: UserComponent,
+    component: HomeComponent,
     canActivate: [AuthGuard],
     data: {
       roles: ['ROLE_USER'],
@@ -98,9 +100,22 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_USER'] },
   },
+   {
+    path: 'scheduler-control',
+    component: SchedulerComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
+  {
+    path:'manage-scheduler',
+     component: SchedulerComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
   { path: 'order-history', component: OrderHistoryComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_USER'] } },
   { path: 'order-details/:orderId', component: OrderDetailsComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_USER', 'ROLE_ADMIN'] } },
   { path: 'all-orders', component: AllOrdersComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_ADMIN'] } },
+  { path: 'addresses', component: CustomerAddressComponent, canActivate:[AuthGuard],data:{roles:['ROLE_USER']} }
 ];
 
 @NgModule({

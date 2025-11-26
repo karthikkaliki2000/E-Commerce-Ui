@@ -1,22 +1,21 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { ProductService } from '../_services/product.service';
-import { map, tap, debounceTime, Subject } from 'rxjs';
-import { ImageProcessingService } from '../_services/image-processing.service';
-import { Product } from '../_model/product.model';
-import { HttpErrorResponse } from '@angular/common/http';
-import { OllamaChatComponent } from '../ollama-chat/ollama-chat.component';
-import { OpenRouterChatComponent } from '../open-router-chat/open-router-chat.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UserAuthService } from '../_services/user-auth.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
+import { ProductService } from "../_services/product.service";
+import { map, tap, debounceTime, Subject } from "rxjs";
+import { ImageProcessingService } from "../_services/image-processing.service";
+import { Product } from "../_model/product.model";
+import { HttpErrorResponse } from "@angular/common/http";
+import { OllamaChatComponent } from "../ollama-chat/ollama-chat.component";
+import { OpenRouterChatComponent } from "../open-router-chat/open-router-chat.component";
+import { ActivatedRoute, Router } from "@angular/router";
+import { UserAuthService } from "../_services/user-auth.service";
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"],
 })
-export class HomeComponent implements OnInit{
-
+export class HomeComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private imageProcessingService: ImageProcessingService,
@@ -24,24 +23,23 @@ export class HomeComponent implements OnInit{
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private userAuthService: UserAuthService,
-    private breakpointObserver: BreakpointObserver,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   searchKeyChanged: Subject<string> = new Subject<string>();
 
   ngOnInit(): void {
-   this.getAllProducts();
-   this.breakpointObserver.observe([
-      Breakpoints.Handset,
-      Breakpoints.Tablet
-    ]).subscribe(result => {
-      if (result.matches) {
-        this.gridCols = 1;
-      } else {
-        this.gridCols = 4;
-      }
-    });
-   this.searchKeyChanged.pipe(debounceTime(300)).subscribe(() => {
+    this.getAllProducts();
+    this.breakpointObserver
+      .observe("(max-width: 992px)")
+      .subscribe((result) => {
+        if (result.matches) {
+          this.gridCols = 1; // When max-width is 992px or less (Mobile/Tablet)
+        } else {
+          this.gridCols = 4; // When width is greater than 992px (Desktop)
+        }
+      });
+    this.searchKeyChanged.pipe(debounceTime(300)).subscribe(() => {
       this.products = [];
       this.pageNumber = 0;
       this.hasMoreProducts = true;
@@ -51,15 +49,15 @@ export class HomeComponent implements OnInit{
 
   products: Product[] = [];
   openChat = false;
-  selectedBot: 'ollama' | 'openrouter' = 'ollama';
-  @ViewChild('ollamaChat') ollamaChat?: OllamaChatComponent;
-  @ViewChild('openRouterChat') openRouterChat?: OpenRouterChatComponent;
+  selectedBot: "ollama" | "openrouter" = "ollama";
+  @ViewChild("ollamaChat") ollamaChat?: OllamaChatComponent;
+  @ViewChild("openRouterChat") openRouterChat?: OpenRouterChatComponent;
   expandedDescriptions = new Set<number>();
   pageNumber = 0;
   pageSize = 12;
   isLoading = false;
   hasMoreProducts = true;
-  searchKey: string = '';
+  searchKey: string = "";
   gridCols = 4; // default
 
   public getAllProducts() {
@@ -68,10 +66,12 @@ export class HomeComponent implements OnInit{
       .getAllProducts(this.pageNumber, this.pageSize, this.searchKey)
       .pipe(
         tap((rawProducts) =>
-          console.log('Raw products from API:', rawProducts)
+          console.log("Raw products from API:", rawProducts)
         ),
         map((x: Product[], i: number) => {
-          return x.map((product, index) => this.imageProcessingService.createImages(product));
+          return x.map((product, index) =>
+            this.imageProcessingService.createImages(product)
+          );
         })
       )
       .subscribe(
@@ -82,7 +82,10 @@ export class HomeComponent implements OnInit{
           this.products = [...this.products, ...data];
           this.pageNumber++;
           this.isLoading = false;
-          console.log('Home page product images:', this.products.map(p => p.productImages));
+          console.log(
+            "Home page product images:",
+            this.products.map((p) => p.productImages)
+          );
           console.log(data);
         },
         (error: HttpErrorResponse) => {
@@ -104,9 +107,9 @@ export class HomeComponent implements OnInit{
   }
 
   clearActiveHistory() {
-    if (this.selectedBot === 'ollama' && this.ollamaChat) {
+    if (this.selectedBot === "ollama" && this.ollamaChat) {
       this.ollamaChat.clearHistory();
-    } else if (this.selectedBot === 'openrouter' && this.openRouterChat) {
+    } else if (this.selectedBot === "openrouter" && this.openRouterChat) {
       this.openRouterChat.clearHistory();
     }
   }
@@ -119,27 +122,30 @@ export class HomeComponent implements OnInit{
     }
   }
 
-  showProductDetails(productId: number | undefined, imageUrl: string | undefined) {
-    this.router.navigate(['/productViewDetails', productId]);
+  showProductDetails(
+    productId: number | undefined,
+    imageUrl: string | undefined
+  ) {
+    this.router.navigate(["/productViewDetails", productId]);
   }
 
   getFirstTwoWords(desc: string): string {
-    if (!desc) return '';
-    const words = desc.split(' ');
-    return words.slice(0, 2).join(' ');
+    if (!desc) return "";
+    const words = desc.split(" ");
+    return words.slice(0, 2).join(" ");
   }
 
   getMiddleWords(desc: string): string {
-    if (!desc) return '';
-    const words = desc.split(' ');
-    if (words.length <= 3) return '';
-    return words.slice(2, -1).join(' ');
+    if (!desc) return "";
+    const words = desc.split(" ");
+    if (words.length <= 3) return "";
+    return words.slice(2, -1).join(" ");
   }
 
   getLastWord(desc: string): string {
-    if (!desc) return '';
-    const words = desc.split(' ');
-    return words.length > 0 ? words[words.length - 1] : '';
+    if (!desc) return "";
+    const words = desc.split(" ");
+    return words.length > 0 ? words[words.length - 1] : "";
   }
 
   onSearch() {
@@ -152,5 +158,4 @@ export class HomeComponent implements OnInit{
   onSearchKeyChange(search: string) {
     this.searchKeyChanged.next(search);
   }
-
 }

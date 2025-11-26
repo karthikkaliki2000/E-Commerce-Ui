@@ -19,7 +19,8 @@
     <mat-grid-list *ngIf="gridCols > 1" [cols]="gridCols" rowHeight="1:1.3" gutterSize="20px" class="grid-container">
         <mat-grid-tile *ngFor="let p of products; let i = index">
             <div class="product-card">
-                <div class="product-image-wrapper">
+                <div class="product-image-wrapper clickable"
+                    (click)="showProductDetails(p.productId, p.productImages?.[0]?.url?.toString())">
                     <img *ngIf="p.productImages?.[0]?.url" [src]="p.productImages?.[0]?.url" alt="Product Image"
                         class="product-image">
                 </div>
@@ -57,7 +58,8 @@
     <!-- Mobile list -->
     <div *ngIf="gridCols === 1" class="mobile-product-list">
         <div *ngFor="let p of products; let i = index" class="product-card">
-            <div class="product-image-wrapper">
+            <div class="product-image-wrapper clickable"
+                (click)="showProductDetails(p.productId, p.productImages?.[0]?.url?.toString())">
                 <img *ngIf="p.productImages?.[0]?.url" [src]="p.productImages?.[0]?.url" alt="Product Image"
                     class="product-image">
             </div>

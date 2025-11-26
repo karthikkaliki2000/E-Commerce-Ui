@@ -53,6 +53,9 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SchedulerComponent } from './scheduler/scheduler.component';
+import { ProductSliderComponentComponent } from './product-slider-component/product-slider-component.component';
+import { CustomerAddressComponent } from './customer-address/customer-address.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     OrderDetailsComponent,
     ConfirmDialogComponent,
     AllOrdersComponent,
+    SchedulerComponent,
+    ProductSliderComponentComponent,
+    CustomerAddressComponent,
   ],
   imports: [
     BrowserModule,

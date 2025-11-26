@@ -1,3 +1,4 @@
+<!-- Top Toolbar -->
 <mat-toolbar color="primary" class="main-toolbar">
   <span>E-Commerce Application</span>
   <span class="space-buttons"></span>
@@ -7,54 +8,53 @@
     <mat-icon>{{ showMobileMenu ? 'close' : 'menu' }}</mat-icon>
   </button>
 
-  <!-- Desktop nav buttons -->
+  <!-- Desktop auth buttons -->
   <div class="desktop-nav" *ngIf="!showMobileMenu">
-    <button mat-raised-button color="primary" *ngIf="!isUserLoggedIn()" routerLink="/login">
-      Login
-    </button>
-    <button mat-raised-button color="warn" *ngIf="isUserLoggedIn()" (click)="logout()">
-      Logout
-    </button>
+    <button mat-raised-button color="primary" *ngIf="!isUserLoggedIn()" routerLink="/login">Login</button>
+    <button mat-raised-button color="warn" *ngIf="isUserLoggedIn()" (click)="logout()">Logout</button>
   </div>
 </mat-toolbar>
 
-<!-- Mobile nav menu -->
-<div class="mobile-nav-menu" *ngIf="showMobileMenu">
-  <button mat-raised-button color="primary" *ngIf="!isUserLoggedIn()" routerLink="/login" (click)="toggleMobileMenu()">
-    Login
-  </button>
-  <button mat-raised-button color="warn" *ngIf="isUserLoggedIn()" (click)="logout(); toggleMobileMenu()">
-    Logout
-  </button>
+<!-- Mobile auth menu -->
+<div class="mobile-nav-menu" *ngIf="showMobileMenu && !isUserLoggedIn()">
+  <button mat-raised-button color="primary" routerLink="/login" (click)="toggleMobileMenu()">Login</button>
 </div>
 
+<!-- Desktop navigation for logged-in users -->
 <mat-toolbar color="primary" *ngIf="isUserLoggedIn() && !showMobileMenu && !isMobileScreen()" class="main-toolbar">
   <button mat-raised-button color="primary" routerLink="/">Home</button>
-  <button *ngIf="isUserLoggedIn() && isUser()" mat-raised-button color="primary" routerLink="/cart">Cart</button>
-  <button *ngIf="isUserLoggedIn() && isUser()" mat-raised-button color="primary" routerLink="/order-history">My
-    Orders</button>
+
+  <!-- User-only buttons -->
+  <button *ngIf="isUser()" mat-raised-button color="primary" routerLink="/cart">Cart</button>
+  <button *ngIf="isUser()" mat-raised-button color="primary" routerLink="/order-history">My Orders</button>
+  <button *ngIf="isUser()" mat-raised-button color="primary" routerLink="/addresses">Manage Addresses</button>
+
+  <!-- Admin-only buttons -->
   <button *ngIf="isAdmin()" mat-raised-button color="primary" [routerLink]="['/addProduct']"
     [queryParams]="{ t: timestamp }" (click)="onAddProductClick()">Add Product</button>
-  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/showProductDetails">View Product
-    Details</button>
+  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/showProductDetails">View Product Details</button>
   <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/all-orders">View All Orders</button>
-  <span class="username-greeting ms-auto" *ngIf="isUserLoggedIn() && username"
-    style="margin-left: auto; font-weight: 500; color: #fff; font-size: 1.08em;">
+  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/manage-scheduler">Manage Scheduler</button>
+
+  <!-- Greeting -->
+  <span class="username-greeting ms-auto" *ngIf="username">
     Welcome, <b>{{ username }}</b>!
   </span>
 </mat-toolbar>
 
-<!-- Mobile nav menu for logged-in user -->
+<!-- Mobile navigation for logged-in users -->
 <div class="mobile-nav-menu" *ngIf="showMobileMenu && isUserLoggedIn()">
   <button mat-raised-button color="primary" routerLink="/" (click)="toggleMobileMenu()">Home</button>
-  <button *ngIf="isUserLoggedIn() && isUser()" mat-raised-button color="primary" routerLink="/cart"
-    (click)="toggleMobileMenu()">Cart</button>
-  <button *ngIf="isUserLoggedIn() && isUser()" mat-raised-button color="primary" routerLink="/order-history"
-    (click)="toggleMobileMenu()">My Orders</button>
+
+  <!-- User-only buttons -->
+  <button *ngIf="isUser()" mat-raised-button color="primary" routerLink="/cart" (click)="toggleMobileMenu()">Cart</button>
+  <button *ngIf="isUser()" mat-raised-button color="primary" routerLink="/order-history" (click)="toggleMobileMenu()">My Orders</button>
+  <button *ngIf="isUser()" mat-raised-button color="primary" routerLink="/addresses" (click)="toggleMobileMenu()">Manage Addresses</button>
+
+  <!-- Admin-only buttons -->
   <button *ngIf="isAdmin()" mat-raised-button color="primary" [routerLink]="['/addProduct']"
     [queryParams]="{ t: timestamp }" (click)="onAddProductClick(); toggleMobileMenu()">Add Product</button>
-  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/showProductDetails"
-    (click)="toggleMobileMenu()">View Product Details</button>
-  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/all-orders" (click)="toggleMobileMenu()">View
-    All Orders</button>
+  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/showProductDetails" (click)="toggleMobileMenu()">View Product Details</button>
+  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/all-orders" (click)="toggleMobileMenu()">View All Orders</button>
+  <button *ngIf="isAdmin()" mat-raised-button color="primary" routerLink="/manage-scheduler" (click)="toggleMobileMenu()">Manage Scheduler</button>
 </div>

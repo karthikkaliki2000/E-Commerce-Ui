@@ -1,0 +1,47 @@
+<div class="scheduler-form">
+  <h2>🕒 Task Scheduler</h2>
+
+  <div class="form-group">
+    <label for="taskName">Task Name:</label>
+    <input id="taskName" [(ngModel)]="taskName" placeholder="e.g. order-shipping" />
+    <small class="input-hint" *ngIf="!taskName.trim()">⚠️ Enter a task name to enable actions.</small>
+  </div>
+
+  <div class="form-group">
+    <label for="cronExpression">Cron Expression:</label>
+    <input id="cronExpression" [(ngModel)]="cronExpression" placeholder="e.g. 0 */15 * * * *" />
+    <small class="input-hint" *ngIf="taskName.trim() && !cronExpression.trim()">⚠️ Enter a cron expression to enable update.</small>
+  </div>
+
+  <div class="button-group">
+    <button mat-raised-button color="primary" [disabled]="!isValidCron()" (click)="updateCron()" matTooltip="Enter task name and cron expression">
+      Update Cron
+    </button>
+    <button mat-raised-button color="warn" [disabled]="!taskName.trim()" (click)="stopTask()" matTooltip="Enter task name first">
+      Stop Task
+    </button>
+    <button mat-raised-button color="accent" [disabled]="!taskName.trim()" (click)="checkStatus()" matTooltip="Enter task name first">
+      Check Status
+    </button>
+    <button mat-raised-button color="default" (click)="loadAllCrons()">
+      All Crons
+    </button>
+  </div>
+
+  <p class="status-message">{{ statusMessage }}</p>
+
+  <table *ngIf="allCrons && objectKeys(allCrons).length" class="cron-table">
+    <thead>
+      <tr>
+        <th>Task Name</th>
+        <th>Cron Expression</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of objectKeys(allCrons)">
+        <td>{{ task }}</td>
+        <td>{{ allCrons[task] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

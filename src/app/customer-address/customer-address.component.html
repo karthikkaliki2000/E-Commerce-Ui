@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="address-wrapper">
+    <!-- Address Form -->
+    <div class="address-form">
+      <h2>{{ editing ? 'Edit Address' : 'Add New Address' }}</h2>
+
+      <form (ngSubmit)="save()" #addressForm="ngForm">
+        <input [(ngModel)]="selected.label" name="label" placeholder="Label (e.g. Home)" required />
+        <input [(ngModel)]="selected.street" name="street" placeholder="Street" required />
+        <input [(ngModel)]="selected.city" name="city" placeholder="City" required />
+        <input [(ngModel)]="selected.state" name="state" placeholder="State" required />
+        <input [(ngModel)]="selected.postalCode" name="postalCode" placeholder="Postal Code" required />
+        <input [(ngModel)]="selected.country" name="country" placeholder="Country" required />
+
+        <input [(ngModel)]="selected.fullName" name="fullName" placeholder="Recipient Full Name" required />
+        <input [(ngModel)]="selected.email" name="email" placeholder="Recipient Email" required email />
+        <input [(ngModel)]="selected.contactNumber" name="contactNumber" placeholder="Phone Number" required />
+        <input [(ngModel)]="selected.alternativeContactNumber" name="alternativeContactNumber" placeholder="Alternate Phone" />
+
+        <button type="submit">{{ editing ? 'Update' : 'Add' }}</button>
+        <button type="button" (click)="resetForm()">Cancel</button>
+      </form>
+    </div>
+
+    <!-- Address List -->
+    <div class="address-list">
+      <h2>Saved Addresses</h2>
+
+      <div *ngIf="addresses.length === 0" class="no-address">
+        No Addresses Available. Please Add an Address.
+      </div>
+
+      <div *ngFor="let addr of addresses" class="address-card" [ngClass]="{ 'default': addr.default }">
+        <p>
+          <strong>
+            {{ addr.label }}
+            <span *ngIf="addr.default" class="default-label">(Default)</span>
+          </strong>
+          <span *ngIf="addr.default">⭐</span>
+        </p>
+         
+        <p>{{ addr.street }}, {{ addr.city }}, {{ addr.state }} - {{ addr.postalCode }}, {{ addr.country }}</p>
+        <p><strong>Recipient:</strong> {{ addr.fullName }} | {{ addr.email }}</p>
+        <p><strong>Phone:</strong> {{ addr.contactNumber }} <span *ngIf="addr.alternativeContactNumber">| Alt: {{ addr.alternativeContactNumber }}</span></p>
+
+        <button (click)="edit(addr)">Edit</button>
+        <button (click)="delete(addr.id!)">Delete</button>
+
+        <label class="default-toggle" *ngIf="!addr.default">
+          <input type="checkbox"
+                 [checked]="addr.default"
+                 (change)="toggleDefault(addr.id!)" />
+          Default
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <p class="status">{{ statusMessage }}</p>
+</div>

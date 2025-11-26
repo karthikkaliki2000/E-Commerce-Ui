@@ -37,6 +37,29 @@ export class ProductDetailsComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  get imageCount(): number {
+    const imgs = (this.product?.productImages || []) as any[];
+    return Array.isArray(imgs) ? imgs.length : 0;
+  }
+
+  canPrev(): boolean {
+    return this.selectedProductIndex > 0;
+  }
+
+  canNext(): boolean {
+    return this.selectedProductIndex < Math.max(0, this.imageCount - 1);
+  }
+
+  prevImage() {
+    if (!this.canPrev()) return;
+    this.selectedProductIndex = Math.max(0, this.selectedProductIndex - 1);
+  }
+
+  nextImage() {
+    if (!this.canNext()) return;
+    this.selectedProductIndex = Math.min(this.imageCount - 1, this.selectedProductIndex + 1);
+  }
+
   get productDiscountPercentage(): number {
     if (!this.product) return 0;
     const actual = this.product.productActualPrice || 0;

@@ -44,4 +44,6 @@ export class UserService {
   public register(registerData: any) {
     return this.http.post(this.PATH_OF_API + '/api/register', registerData);
   }
+
+  
 }

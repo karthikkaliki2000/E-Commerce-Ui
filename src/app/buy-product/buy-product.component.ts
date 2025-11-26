@@ -7,6 +7,7 @@ import { ProductService } from '../_services/product.service';
 import { Router } from '@angular/router';
 import { CheckoutDataService } from '../_services/checkout-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddressService } from '../_services/address.service';
 // import * as Razorpay from 'razorpay'; // Remove this line
 
 declare var Razorpay: any; // Add this line for Razorpay global
@@ -37,6 +38,10 @@ interface TransactionResponse {
   styleUrls: ['./buy-product.component.css']
 })
 export class BuyProductComponent implements OnInit{
+
+  defaultAddress: string = '';
+  isAddressEditable: boolean = false;
+
   ngOnInit(): void {
     this.productDetails = this.activatedRoute.snapshot.data['productDetails'];
     // Support both query and matrix params
@@ -82,13 +87,29 @@ export class BuyProductComponent implements OnInit{
 
     }
     console.log('orderDetails:', this.orderDetails);
+
+
+
+    //address default fetching
+    this.addressService.getDefault().subscribe({
+  next: (addr) => {
+    this.defaultAddress = `${addr.label}: ${addr.street}, ${addr.city}, ${addr.state} - ${addr.postalCode}, ${addr.country}`;
+    if (!this.orderDetails.fullAddress) {
+      this.orderDetails.fullAddress = this.defaultAddress;
+    }
+  },
+  error: (err) => {
+    console.error('Failed to fetch default address', err);
+  }
+});
+
   }
 
   productDetails: Product[] = [];
   isSingleProductCheckout: boolean = false;
   isProcessing: boolean = false; // To disable order button during processing
 
-  constructor(private activatedRoute: ActivatedRoute, private productService: ProductService, private router: Router, private checkoutDataService: CheckoutDataService, private snackBar: MatSnackBar) { }
+  constructor(public addressService:AddressService,private activatedRoute: ActivatedRoute, private productService: ProductService, private router: Router, private checkoutDataService: CheckoutDataService, private snackBar: MatSnackBar) { }
   orderDetails: OrderDetails = {
     fullName: '',
     fullAddress: '',

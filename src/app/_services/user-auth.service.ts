@@ -6,45 +6,34 @@ import { Injectable } from '@angular/core';
 export class UserAuthService {
   constructor() {}
 
-  public setRoles(roles: []) {
-    localStorage.setItem('roles', JSON.stringify(roles));
-  }
-
-  public getRoles(): any {
-    const roles = localStorage.getItem('roles');
-    return roles ? JSON.parse(roles) : null;
-  }
-
-  public setToken(jwtToken: string) {
+  // Token
+  public setToken(jwtToken: string): void {
     localStorage.setItem('jwtToken', jwtToken);
   }
 
-  public getToken(): any {
-    const token = localStorage.getItem('jwtToken');
-    return token ? token : null; // return null if token is not found
+  public getToken(): string | null {
+    return localStorage.getItem('jwtToken');
   }
 
-  public clear() {
-    localStorage.clear();
+  public removeToken(): void {
+    localStorage.removeItem('jwtToken');
   }
 
-  public isUserLoggedIn(): boolean {
-    const isUserLoggedIn = this.getToken() && this.getRoles();
-
-    return isUserLoggedIn;
+  // Roles
+  public setRoles(roles: any[]): void {
+    localStorage.setItem('roles', JSON.stringify(roles));
   }
 
-  public isUser(): boolean {
-    const roles: any[] = this.getRoles();
-    return roles[0].role_name === 'ROLE_USER'; // check if user has user
+  public getRoles(): any[] {
+    const roles = localStorage.getItem('roles');
+    return roles ? JSON.parse(roles) : [];
   }
 
-  public isAdmin(): boolean {
-    const roles: any[] = this.getRoles();
-
-    return roles[0].role_name === 'ROLE_ADMIN'; // check if user has admin
+  public removeRoles(): void {
+    localStorage.removeItem('roles');
   }
 
+  // Username from JWT
   public getUsername(): string | null {
     const token = this.getToken();
     if (!token) return null;
@@ -54,5 +43,48 @@ export class UserAuthService {
     } catch {
       return null;
     }
+  }
+
+  // Full name from JWT (if included as claim)
+  public getFullName(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.fullName || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Email from JWT (if included as claim)
+  public getEmail(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.email || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Role checks
+  public isUser(): boolean {
+    return this.getRoles().some(role => role.role_name === 'ROLE_USER');
+  }
+
+  public isAdmin(): boolean {
+    return this.getRoles().some(role => role.role_name === 'ROLE_ADMIN');
+  }
+
+  // Login status
+  public isUserLoggedIn(): boolean {
+    return !!this.getToken();
+  }
+
+  // Clear all
+  public clear(): void {
+    localStorage.clear();
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { UserAuthService } from '../_services/user-auth.service';
 import { Router } from '@angular/router';
+import { UserAuthService } from '../_services/user-auth.service';
 import { UserService } from '../_services/user.service';
 
 @Component({
@@ -55,4 +55,6 @@ export class HeaderComponent {
   get username(): string | null {
     return this.userAuthService.getUsername();
   }
+
+  
 }
