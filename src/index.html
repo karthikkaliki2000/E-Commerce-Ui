@@ -11,6 +11,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+ <!-- Grafana Faro SDK -->
+<script src="https://unpkg.com/@grafana/faro-web-sdk"></script>
+<script>
+  GrafanaFaroWebSdk.initializeFaro({
+    // 1. Correct URL for Browser Data (Faro Collector)
+    url: 'https://faro-collector-prod-ap-south-1.grafana.net/collect', 
+    
+    // 2. Auth goes here, NOT in api headers
+    apiKey: 'glc_eyJvIjoiMTYwOTM4NCIsIm4iOiJ3cml0ZS1rZXktd3JpdGUta2V5IiwiayI6Ilp1RDJiTnEzMTA1NFo0N3BaR3FHejROOSIsIm0iOnsiciI6InByb2QtYXAtc291dGgtMSJ9fQ==', 
+    
+    app: {
+      name: 'ecommerce-app', // Matches your title
+      version: '1.0.0',
+      environment: 'production'
+    },
+    
+    // 3. Ensure we capture everything needed for your dashboard
+    enable: ['logs', 'traces', 'metrics'] 
+  });
+</script>
+<!-- End Grafana Faro SDK -->
+
 </head>
 
 <body class="mat-typography">
